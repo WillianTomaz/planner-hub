@@ -1,0 +1,334 @@
+{
+  "menuConfig": {
+    "menuTitle": "Planner HUB",
+    "menuIcon": "/icons/plannerhub-icon.png",
+    "menuItems": [
+      {
+        "id": "index",
+        "order": "1",
+        "title": "DASHBOARD",
+        "description": "DASHBOARD",
+        "link": "dashboard",
+        "isVisible": true,
+        "showOnDashboard": "",
+        "itemsContent": ""
+      },
+      {
+        "id": "pro-todo",
+        "order": "2",
+        "title": "[PRO] TODO LIST",
+        "description": "[PROFISSIONAL] TODO LIST",
+        "link": "pro-todo",
+        "isVisible": true,
+        "showOnDashboard": true,
+        "itemsContent": [
+          {
+            "title": "SEGUNDA-FEIRA",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              },
+              {
+                "id": "3",
+                "text": "Resolver Problema XPTO"
+              }
+            ]
+          },
+          {
+            "title": "TERÇA-FEIRA",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              },
+              {
+                "id": "3",
+                "text": "Resolver Problema XPTO"
+              }
+            ]
+          },
+          {
+            "title": "QUARTA-FEIRA",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              },
+              {
+                "id": "3",
+                "text": "Resolver Problema XPTO"
+              }
+            ]
+          },
+          {
+            "title": "QUINTA-FEIRA",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              },
+              {
+                "id": "3",
+                "text": "Resolver Problema XPTO"
+              }
+            ]
+          },
+          {
+            "title": "SEXTA-FEIRA",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              },
+              {
+                "id": "3",
+                "text": "Resolver Problema XPTO"
+              }
+            ]
+          },
+          {
+            "title": "SABADO",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              },
+              {
+                "id": "3",
+                "text": "Resolver Problema XPTO"
+              }
+            ]
+          },
+          {
+            "title": "DOMINGO",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              },
+              {
+                "id": "3",
+                "text": "Resolver Problema XPTO"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "per-todo",
+        "order": "3",
+        "title": "[PER] TODO LIST",
+        "description": "[PROFISSIONAL] TODO LIST",
+        "link": "per-todo",
+        "isVisible": true,
+        "showOnDashboard": true,
+        "itemsContent": [
+          {
+            "title": "SEGUNDA-FEIRA",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              }
+            ]
+          },
+          {
+            "title": "TERÇA-FEIRA",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              }
+            ]
+          },
+          {
+            "title": "QUARTA-FEIRA",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              }
+            ]
+          },
+          {
+            "title": "QUINTA-FEIRA",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              }
+            ]
+          },
+          {
+            "title": "SEXTA-FEIRA",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              }
+            ]
+          },
+          {
+            "title": "SABADO",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              }
+            ]
+          },
+          {
+            "title": "DOMINGO",
+            "descriptionList": [
+              {
+                "id": "1",
+                "text": "Resolver Problema X"
+              },
+              {
+                "id": "2",
+                "text": "Resolver Problema Y"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "annotations",
+        "order": "4",
+        "title": "ANNOTATIONS",
+        "description": "Annotations",
+        "link": "annotations",
+        "isVisible": true,
+        "showOnDashboard": true,
+        "itemsContent": [
+          {
+            "title": "NOTE 1",
+            "descriptionList": [
+              {
+                "id": "1",
+                "title": "COMPRAR BANANA",
+                "description": "COMPRAR BANANA"
+              }
+            ]
+          },
+          {
+            "title": "NOTE 2",
+            "descriptionList": [
+              {
+                "id": "2",
+                "title": "PAGAR CONTA DE LUZ",
+                "description": "PAGAR CONTA DE LUZ"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "schedule",
+        "order": "5",
+        "title": "SCHEDULE",
+        "description": "Schedule",
+        "link": "schedule",
+        "isVisible": true,
+        "showOnDashboard": true,
+        "itemsContent": [
+          {
+            "title": "MY AGENDA",
+            "descriptionList": [
+              {
+                "id": "1",
+                "dateAndTime": "05/10/2025 11:00am",
+                "text": "Cortar o Cabelo"
+              },
+              {
+                "id": "2",
+                "dateAndTime": "15/10/2025 08:00am",
+                "text": "Lavar o carro"
+              },
+              {
+                "id": "3",
+                "dateAndTime": "17/10/2025 13:00pm",
+                "text": "Fazer checkin do Hotel"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }, 
+  "userConfig": [
+    {
+      "id": "1",
+      "name": "Admin",
+      "username": "admin-full",
+      "permission": "full",
+      "active": true
+    },
+    {
+      "id": "2",
+      "name": "Common User",
+      "username": "user-01",
+      "permission": "read",
+      "active": true
+    }
+  ],
+  "appConfig": [
+    {
+      "darkModeEnabled": false,
+      "backupFileName": "PlannerHub"
+    }
+  ]
+}
