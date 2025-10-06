@@ -457,3 +457,46 @@ button {
     color: #FF5C5C;
     transform: none;
 }
+
+
+/* Container para alinhar Ícone e Título */
+.app-title-container {
+    display: flex;
+    align-items: center;
+    /* Move o título um pouco para a esquerda para centralizar visualmente */
+    transform: translateX(-10px); 
+}
+
+.app-icon {
+    width: 72px; /* Tamanho do ícone */
+    height: 72px;
+    margin-right: 8px; /* Espaço entre o ícone e o texto */
+    /* Garante que o ícone pareça mais suave, útil para redimensionamento */
+    image-rendering: -webkit-optimize-contrast; 
+}
+
+/* Estiliza o título do cabeçalho */
+.app-title {
+    font-size: 1.7rem; /* Aumenta um pouco */
+    font-weight: 800;
+    color: var(--color-secondary); /* Use a cor principal para dar destaque */
+    letter-spacing: 3px;
+}
+
+/* Estilos para o MenuDrawer.tsx */
+
+/* Estilo para a área que substitui o título no menu lateral */
+.menu-header-icon {
+    display: flex;
+    justify-content: center; /* Centraliza o ícone */
+    align-items: center;
+    height: 120px; /* Garante que a área do cabeçalho tenha um tamanho */
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.menu-header-icon .app-icon {
+    width: 150px; /* Ícone um pouco maior no menu lateral */
+    height: 150px;
+    margin-right: 0; /* Remove a margem para ficar centralizado */
+}

@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { MenuDrawer } from './MenuDrawer';
 import { usePlannerData } from '../hooks/usePlannerData';
+// NOVO: Importa o ícone para uso no React
+import plannerhubIcon from '../assets/plannerhub-icon.png'; 
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -39,8 +41,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           ☰ MENU
         </button>
         
-        <div className="app-title">
-            {data?.menuConfig.menuTitle || "Planner HUB"}
+        {/* NOVO: Div para o Título e Ícone */}
+        <div className="app-title-container"> 
+            <img src={plannerhubIcon} alt="Planner Hub Icon" className="app-icon" />
+            <div className="app-title">
+                {data?.menuConfig.menuTitle || "Planner HUB"}
+            </div>
         </div>
         
         {/* Status e Botão SAVE */}

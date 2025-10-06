@@ -2,6 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePlannerData } from '../hooks/usePlannerData';
+import plannerhubIcon from '../assets/plannerhub-favicon.png'; 
 
 interface MenuDrawerProps {
   isOpen: boolean;
@@ -41,9 +42,8 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({ isOpen, onClose, onExpor
     <div className={`menu-drawer ${isOpen ? 'open' : ''}`} onClick={onClose}>
       {/* O div interno impede o fechamento ao clicar no conteúdo do menu */}
       <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
-        <div className="menu-header">
-            {/* Usa o título do JSON no cabeçalho */}
-            {data?.menuConfig.menuTitle || "MENU"}
+        <div className="menu-header menu-header-icon">
+            <img src={plannerhubIcon} alt="Planner Hub Icon" className="app-icon" />
         </div>
         
         {/* Botão de Fechar com novo estilo */}
