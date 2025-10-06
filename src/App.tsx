@@ -17,7 +17,7 @@ function App() {
   }
   
   // Routes protected by authentication status
-  const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
     if (!isAuthenticated) {
       return <Navigate to="/identification" replace />;
     }

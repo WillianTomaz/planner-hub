@@ -1,7 +1,7 @@
 // src/pages/Annotations.tsx
 import React, { useMemo } from 'react';
 import { usePlannerData } from '../hooks/usePlannerData';
-import { ItemContent, AnnotationItem } from '../types/planner';
+import type { ItemContent, AnnotationItem } from '../types/planner';
 
 // Reusable component for a single annotation card
 const AnnotationCard: React.FC<{ 

@@ -1,7 +1,7 @@
 // src/pages/Schedule.tsx
 import React, { useMemo, useState } from 'react';
 import { usePlannerData } from '../hooks/usePlannerData';
-import { ItemContent, ScheduleItem, PlannerData } from '../types/planner';
+import type { ItemContent, ScheduleItem } from '../types/planner';
 
 // Reusable component for a single schedule item
 const ScheduleEntry: React.FC<{ 
@@ -23,7 +23,7 @@ const ScheduleEntry: React.FC<{
             }
         } catch (e) {
             // Retorna a string original se a formatação falhar
-            return `[${dateTimeStr}]`;
+            return `[${dateTimeStr}]: [${e}]`;
         }
         return `[${dateTimeStr}]`;
     };
@@ -73,8 +73,12 @@ export const Schedule: React.FC = () => {
         const agendaSection = agendaContent.find(s => s.title === AGENDA_TITLE);
         // Ordena os itens por data e hora (simplificado: tenta ordenar pela string)
         const sortedItems = (agendaSection?.descriptionList || [])
-            .slice() // Cria uma cópia para ordenar
-            .sort((a, b) => a.dateAndTime.localeCompare(b.dateAndTime)); 
+            .slice()
+            .sort((a, b) => 
+                'dateAndTime' in a && 'dateAndTime' in b
+                ? a.dateAndTime.localeCompare(b.dateAndTime)
+                : 0
+            );
 
         return sortedItems as ScheduleItem[];
     }, [agendaContent]);

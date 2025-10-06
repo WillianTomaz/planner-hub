@@ -1,7 +1,7 @@
 // src/pages/Dashboard.tsx
 import React, { useMemo } from 'react';
 import { usePlannerData } from '../hooks/usePlannerData';
-import { MenuItem, ItemContent } from '../types/planner';
+import type { MenuItem, ItemContent } from '../types/planner';
 
 // Mock component to render the list item preview
 const DashboardContentPreview: React.FC<{ itemContent: ItemContent[] }> = ({ itemContent }) => {
@@ -14,8 +14,13 @@ const DashboardContentPreview: React.FC<{ itemContent: ItemContent[] }> = ({ ite
       {listItems.length > 0 ? (
         listItems.map((item, index) => (
           <p key={index} style={{ fontSize: '0.9rem', margin: '4px 0' }}>
-            {/* Simple display based on common fields */}
-            {item.dateAndTime ? `[${item.dateAndTime.split(' ')[0]}] ${item.text}` : item.text || item.title}
+            {'dateAndTime' in item
+              ? `[${item.dateAndTime.split(' ')[0]}] ${item.text}`
+              : 'text' in item
+              ? item.text
+              : 'title' in item
+              ? item.title
+              : ''}
           </p>
         ))
       ) : (

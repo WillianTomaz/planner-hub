@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react'; // Adicionando useRef
 import { useNavigate } from 'react-router-dom';
 import { usePlannerData } from '../hooks/usePlannerData';
-import { PlannerData } from '../types/planner'; // Assumindo que o erro de importação foi resolvido
+import type { PlannerData } from '../types/planner'; // Assumindo que o erro de importação foi resolvido
 
 export const Identification: React.FC = () => {
   const { data, isAuthenticated, updatePlannerData } = usePlannerData();

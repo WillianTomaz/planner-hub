@@ -1,7 +1,7 @@
 // src/pages/TodoList.tsx
 import React, { useMemo } from 'react';
 import { usePlannerData } from '../hooks/usePlannerData';
-import { TodoItem, ItemContent, PlannerData } from '../types/planner';
+import type { TodoItem, ItemContent } from '../types/planner';
 
 interface TodoListProps {
   categoryId: 'pro-todo' | 'per-todo';

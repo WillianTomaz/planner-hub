@@ -1,6 +1,6 @@
 // src/hooks/usePlannerData.ts
 import { useState, useEffect, useCallback } from 'react';
-import { PlannerData } from '../types/planner'; 
+import type { PlannerData } from '../types/planner'; 
 
 const STORAGE_KEY = 'plannerHub_data';
 

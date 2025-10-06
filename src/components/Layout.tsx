@@ -9,7 +9,7 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   // exportData is needed here
-  const { data, saveLocalState, resetData, exportData } = usePlannerData(); 
+  const { data, exportData } = usePlannerData(); 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // CORREÇÃO: Chama exportData para salvar no LocalStorage E realizar o download
