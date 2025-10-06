@@ -1,13 +1,12 @@
-# PLANNER HUB
+[![Netlify Status](https://api.netlify.com/api/v1/badges/982304fa-1fa7-4d69-8993-75c6c7ab461f/deploy-status)](https://app.netlify.com/projects/planner-hub/deploys)
 
-A personal, single-page weekly planning application designed to work entirely in the browser using **LocalStorage** for persistent data storage. No backend or API is required, making it perfect for free deployment on GitHub Pages or Netlify.
+# PLANNER HUB
+> A personal, single-page weekly planning application designed to work entirely in the browser using **LocalStorage** for persistent data storage. No backend or API is required, making it perfect for free deployment on GitHub Pages or Netlify.
 
 ## Motivation
-
-Tired of using paper planners, this project aims to create a highly functional, responsive digital planner. The core constraint—no database—is solved by leveraging browser storage and file export for backups, giving the user full control over their data.
+> Tired of using paper planners, this project aims to create a highly functional, responsive digital planner. The core constraint—no database—is solved by leveraging browser storage and file export for backups, giving the user full control over their data.
 
 ## Technologies Used
-
 * **Framework:** React v18+
 * **Language:** TypeScript
 * **Bundler:** Vite
@@ -15,11 +14,10 @@ Tired of using paper planners, this project aims to create a highly functional, 
 * **Data Management:** LocalStorage & JSON
 
 ## Project Architecture Flow (Mermaid Diagram)
-
 ```mermaid
 graph TD
     A[User Loads App] --> B{Check LocalStorage};
-    B -- Empty/Cleared --> C[Load PlannerHub.json (Default)];
+    B -- Empty/Cleared --> C[Load PlannerHub.json];
     B -- Data Found --> D[Load Data from LocalStorage];
     C --> D;
     D --> E(Planner Hub State: App/Menu/Tasks);
@@ -27,7 +25,7 @@ graph TD
     F -- Change Detected --> G[Status: Not Saved];
     G --> H{User Action};
     H -- Click 'SAVE' --> I[Save State to LocalStorage];
-    H -- Click 'EXPORT' --> J[Export JSON File (Timestamped BKP)];
+    H -- Click 'EXPORT' --> J[Export JSON File];
     H -- Click 'RESET' --> K[Clear LocalStorage & Reload];
     I --> L[Status: Saved];
     L --> E;
