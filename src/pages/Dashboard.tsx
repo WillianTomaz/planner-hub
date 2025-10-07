@@ -1,41 +1,43 @@
-// src/pages/Dashboard.tsx
 import React, { useMemo } from 'react';
 import { usePlannerData } from '../hooks/usePlannerData';
+import { useNavigate } from 'react-router-dom';
+
 import type { MenuItem, ItemContent, TodoItem, AnnotationItem, ScheduleItem, DescriptionItem } from '../types/planner';
 
 // Utility function to get the current day of the week in Portuguese
 const getWeekDayName = (date: Date): string => {
-    // Array dos dias da semana em Português, começando por Domingo (índice 0)
-    const days = ['DOMINGO', 'SEGUNDA-FEIRA', 'TERÇA-FEIRA', 'QUARTA-FEIRA', 'QUINTA-FEIRA', 'SEXTA-FEIRA', 'SÁBADO'];
+    // Array of days of the week, starting with Sunday (index 0)
+    const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
     return days[date.getDay()];
 };
 
 // Component that handles the specific content logic for the dashboard preview
 const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemContent[] } }> = ({ item }) => {
     
+    const navigate = useNavigate();
     const { itemsContent, id } = item;
-    // Pega a data/hora atual para referências futuras
+    // Gets the current date/time for future reference
     const now = useMemo(() => new Date(), []);
     const weekDay = useMemo(() => getWeekDayName(now), [now]);
 
-    // Lógica para selecionar os itens específicos com base no ID
+    // Logic to select specific items based on ID
     const { selectedItems, dailySectionTitle } = useMemo(() => {
         
-        // Função para analisar a string de data/hora do Schedule (DD/MM/YYYY HH:mmAM/PM)
+        // Function to parse the Schedule date/time string (DD/MM/YYYY HH:mmAM/PM)
         const parseScheduleDate = (dateAndTime: string): Date | null => {
-            // Regex para capturar as partes: DD/MM/YYYY HH:mmAM/PM
+            // Regex to capture the parts: DD/MM/YYYY HH:mmAM/PM
             const parts = dateAndTime.match(/(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})(am|pm)/i);
             if (parts) {
-                // No formato JSON: [1]=Dia, [2]=Mês, [3]=Ano, [4]=Hora, [5]=Minuto, [6]=AM/PM
+                // In JSON format: [1]=Day, [2]=Month, [3]=Year, [4]=Hour, [5]=Minute, [6]=AM/PM
                 const [, day, month, year, hour, minute, ampm] = parts;
                 let h = parseInt(hour, 10);
                 const m = parseInt(minute, 10);
 
-                // Conversão de 12h para 24h
+                // Conversion from 12h to 24h
                 if (ampm.toLowerCase() === 'pm' && h < 12) h += 12;
                 if (ampm.toLowerCase() === 'am' && h === 12) h = 0; // 12:xx AM = 0h
 
-                // O construtor Date() em JS usa Mês com índice 0 (Mês - 1)
+                // The Date() constructor in JS uses Month with index 0 (Month - 1)
                 return new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10), h, m);
             }
             return null;
@@ -45,21 +47,21 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
         let selectedItems: DescriptionItem[] = [];
         
         if (id === 'pro-todo' || id === 'per-todo') {
-            // 1. TODO LISTS: Encontrar a seção do dia atual
+            // 1. TODO LISTS: Find the current day's section
             const dailySection = itemsContent.find(section => section.title.toUpperCase() === weekDay);
             
             if (dailySection) {
-                // CAPTURA DO TÍTULO DA SEÇÃO
+                // CAPTURE SECTION TITLE
                 dailySectionTitle = dailySection.title;
                 
-                // Retorna até 3 tarefas não concluídas do dia
+                // Returns up to 3 uncompleted tasks for the day
                 selectedItems = (dailySection.descriptionList as TodoItem[])
                     .filter(todo => !todo.completed)
                     .slice(0, 3);
             }
             
         } else if (id === 'annotations') {
-            // 2. ANNOTATIONS: Obter a última anotação (mais recente)
+            // 2. ANNOTATIONS: Get the last (most recent) annotation
             const allNotes = itemsContent.flatMap(section => section.descriptionList as AnnotationItem[]);
             
             if (allNotes.length > 0) {
@@ -67,38 +69,37 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
             }
             
         } else if (id === 'schedule') {
-            // 3. SCHEDULE: Obter agendamentos de hoje OU o próximo
+            // 3. SCHEDULE: Get appointments for today OR next day
             const allSchedules = itemsContent.flatMap(section => section.descriptionList as ScheduleItem[]);
 
-            // Filtra e ordena agendamentos futuros
+            // Filters and sorts future appointments
             const futureSchedules: (ScheduleItem & { dateObj: Date })[] = allSchedules
                 .map(item => {
                     const dateObj = parseScheduleDate(item.dateAndTime);
-                    // Filtra itens que não puderam ser analisados ou que já passaram
+                    // Filters items that could not be analyzed or that have already passed
                     if (dateObj && dateObj.getTime() >= now.getTime()) {
                         return { ...item, dateObj };
                     }
                     return null;
                 })
                 .filter((item): item is ScheduleItem & { dateObj: Date } => item !== null)
-                .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()); // Ordena por data/hora ascendente
+                .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()); // Sorts by ascending date/time
 
-            // Prepara a data de início e fim do dia atual
+            // Sets the start and end date of the current day
             const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
             const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
-            // Filtra os agendamentos que caem DENTRO do dia de hoje (e já são futuros)
+            // Filters appointments that fall WITHIN today (and are already future)
             const todaysSchedules = futureSchedules
                 .filter(item => item.dateObj.getTime() >= todayStart.getTime() && item.dateObj.getTime() <= todayEnd.getTime())
-                .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()); // Ordena por horário
+                .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()); // Sorts by time
 
             if (todaysSchedules.length > 0) {
-                // Define o título da seção como 'HOJE'
-                dailySectionTitle = 'HOJE';
+                // Sets the section title to 'TODAY'
+                dailySectionTitle = 'TODAY';
                 selectedItems = todaysSchedules;
             } else if (futureSchedules.length > 0) {
-                // Define o título como 'PRÓXIMO EVENTO'
-                dailySectionTitle = 'PRÓXIMO EVENTO';
+                dailySectionTitle = 'UPCOMING EVENTS:';
                 selectedItems = [futureSchedules[0]];
             }
         }
@@ -107,10 +108,10 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
     }, [itemsContent, id, weekDay, now]);
 
 
-    // Helper para formatar a exibição do item
+    // Helper to format the item display
     const formatItemDisplay = (item: DescriptionItem): string => {
-        // A função parseScheduleDate precisa estar disponível aqui, ou a lógica repetida/isolada.
-        // Vou repeti-la para manter o escopo local, já que é uma função auxiliar e leve.
+        // The parseScheduleDate function needs to be available here, or the logic repeated/isolated.
+        // I'll repeat it to maintain local scope, since it's a lightweight helper function. 
         const parseScheduleDate = (dateAndTime: string): Date | null => {
             const parts = dateAndTime.match(/(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})(am|pm)/i);
             if (parts) {
@@ -130,7 +131,7 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
             
             if (date) {
                 const isToday = date.toDateString() === now.toDateString();
-                const datePart = isToday ? 'Hoje' : date.toLocaleDateString('pt-BR');
+                const datePart = isToday ? 'Today' : date.toLocaleDateString('pt-BR');
                 const timePart = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
                 return `[${datePart} ${timePart}] ${schedule.text}`;
             }
@@ -142,16 +143,39 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
         } else if ('title' in item) { // AnnotationItem
             const annotation = item as AnnotationItem;
             const snippet = annotation.description.length > 50 ? annotation.description.substring(0, 50) + '...' : annotation.description;
-            // Garante que o texto em negrito seja visível, mas pode precisar de um componente de Markdown para renderização real.
+            // Ensures bold text is visible, but may require a Markdown component for actual rendering.
             return `${annotation.title}: ${snippet}`; 
         }
         return 'Item de Conteúdo Inválido';
     };
 
+    // Function for navigation
+    const handleNavigation = (pathId: string) => {
+        // 1. Close the menu
+        // onClose(); 
+        
+        // 2. Construct the path (e.g. 'annotations' -> '/annotations')
+        const path = `/${pathId}`;
+        
+        // 3. Browse
+        navigate(path); 
+    };
+    // Function that handles the menu item click event (Fixed and elegant)
+    const handleMenuItemClick = (e: React.MouseEvent<HTMLAnchorElement>, itemId: string) => {
+        // ESSENTIAL: Prevents event propagation to avoid flickering behavior
+        e.preventDefault(); 
+        e.stopPropagation(); 
+        
+        // Fixes a special case: 'index' must be '/' (dashboard)
+        const finalItemId = itemId === 'index' ? '' : itemId;
+
+        handleNavigation(finalItemId);
+    }
+
     return (
         <div style={{ marginTop: '10px' }}>
             
-            {/* NOVO: Exibe o título da seção do dia (TODO List) ou o status (Schedule) */}
+            {/* NEW: Displays the day's section title (TODO List) or status (Schedule) */}
             {dailySectionTitle && (
                  <h4 style={{ margin: '0 0 10px 0', fontSize: '1rem', color: 'var(--color-secondary)', fontWeight: 'bold' }}>
                     {dailySectionTitle}
@@ -177,20 +201,22 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
             ) : (
                 <p style={{ fontStyle: 'italic', fontSize: '0.9rem' }}>
                     {id === 'pro-todo' || id === 'per-todo' 
-                        ? `Nenhuma tarefa para ${weekDay}.` 
+                        ? `No task to ${weekDay}.` 
                         : id === 'annotations' 
-                        ? 'Nenhuma anotação disponível.' 
+                        ? 'No notes available.'
                         : id === 'schedule' 
-                        ? 'Nenhum agendamento futuro encontrado.'
-                        : 'Nenhuma informação disponível.'
+                        ? 'No future appointments found.'
+                        : 'No information available.'
                     }
                 </p>
             )}
             
-            {/* Adiciona um link para a página completa */}
+            {/* Adds a link to the full page */}
             {item.link && (
-                <a href={`/${item.link}`} style={{ fontSize: '0.8rem', marginTop: '10px', display: 'block', color: 'var(--color-primary)' }}>
-                    Ver mais...
+                <a className="link-to-full-page"
+                    key={item.id}
+                    onClick={(e) => handleMenuItemClick(e, item.id)} >
+                    {item.description}
                 </a>
             )}
         </div>
@@ -217,33 +243,37 @@ export const Dashboard: React.FC = () => {
 
     return (
         <div className="page-container dashboard-page">
-            <div className="dashboard-grid">
-                {dashboardItems.map(item => (
-                    <div key={item.id} className="card dashboard-card">
-                        {/* Título Principal do Item (Ex: [PRO] TODO LIST) */}
-                        <h3 style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: '8px', marginBottom: '8px' }}>
-                            {item.title}
-                        </h3>
-                        
-                        {/* Conteúdo Inteligente, incluindo o subtítulo do dia */}
-                        <DashboardContentPreview item={item} />
-                    </div>
-                ))}
-            </div>
-            
-            {/* Display de Data/Hora */}
+            {/* Date/Time Display */}
             <div style={{ 
-                position: 'absolute', 
-                top: '30px', 
-                right: '30px', 
-                fontSize: '0.8rem', 
+                // position: 'absolute', 
+                // top: '30px', 
+                // right: '30px', 
+                fontSize: '1.5rem', 
                 fontWeight: '600',
                 backgroundColor: 'var(--color-surface)',
+                borderRadius: '10px',
                 padding: '8px',
-                borderRadius: '4px',
-                boxShadow: 'var(--shadow-elevation-low)' 
+                marginBottom: "35px",
+                textAlign: 'center',
+
             }}>
                 {timestamp}
+            </div>
+            <div>
+                <div className="dashboard-grid">
+                    {dashboardItems.map(item => (
+                        <div key={item.id} className="card dashboard-card">
+                            {/* Main Item Title (Ex: [PRO] TODO LIST) */}
+                            <h3 style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: '8px', marginBottom: '8px' }}>
+                                {item.description}
+                            </h3>
+                            
+                            {/* Smart Content, including the day's subtitle */}
+                            <DashboardContentPreview item={item} />
+                        </div>
+                    ))}
+                </div>
+                
             </div>
         </div>
     );

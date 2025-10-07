@@ -117,10 +117,23 @@ button {
 }
 
 /* Botões Principais (Menu Toggle, Save) */
-.menu-toggle, .save-button {
+.menu-toggle {
     background-color: var(--color-primary);
     color: var(--color-background);
     margin: 0 var(--spacing-xs);
+    padding: 18px;
+    width: 60px;
+    height: 60px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.save-button {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    margin: 0 var(--spacing-xs);
+    margin-left: 20px;
+    padding: 10px;
+    width: 60px;
+    height: 45px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -499,4 +512,17 @@ button {
     width: 150px; /* Ícone um pouco maior no menu lateral */
     height: 150px;
     margin-right: 0; /* Remove a margem para ficar centralizado */
+}
+
+.link-to-full-page {
+    font-size: '0.8rem'; 
+    margin-top: '10px'; 
+    display: 'block'; 
+    color: #4574bb;
+    
+}
+.link-to-full-page:hover {
+    cursor: pointer;
+    color: #A3C9FF;
+    transform: translateY(-1px);
 }

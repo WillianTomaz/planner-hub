@@ -23,121 +23,65 @@
         "showOnDashboard": true,
         "itemsContent": [
           {
-            "title": "SEGUNDA-FEIRA",
+            "title": "MONDAY",
             "descriptionList": [
               {
                 "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
-                "id": "2",
-                "text": "Resolver Problema Y"
-              },
-              {
-                "id": "3",
-                "text": "Resolver Problema XPTO"
+                "text": "Example of Work activities."
               }
             ]
           },
           {
-            "title": "TERÇA-FEIRA",
+            "title": "TUESDAY",
             "descriptionList": [
               {
-                "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
                 "id": "2",
-                "text": "Resolver Problema Y"
-              },
-              {
-                "id": "3",
-                "text": "Resolver Problema XPTO"
+                "text": "Example of Work activities."
               }
             ]
           },
           {
-            "title": "QUARTA-FEIRA",
+            "title": "WEDNESDAY",
             "descriptionList": [
               {
-                "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
-                "id": "2",
-                "text": "Resolver Problema Y"
-              },
-              {
                 "id": "3",
-                "text": "Resolver Problema XPTO"
+                "text": "Example of Work activities."
               }
             ]
           },
           {
-            "title": "QUINTA-FEIRA",
+            "title": "THURSDAY",
             "descriptionList": [
               {
-                "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
-                "id": "2",
-                "text": "Resolver Problema Y"
-              },
-              {
-                "id": "3",
-                "text": "Resolver Problema XPTO"
+                "id": "4",
+                "text": "Example of Work activities."
               }
             ]
           },
           {
-            "title": "SEXTA-FEIRA",
+            "title": "FRIDAY",
             "descriptionList": [
               {
-                "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
-                "id": "2",
-                "text": "Resolver Problema Y"
-              },
-              {
-                "id": "3",
-                "text": "Resolver Problema XPTO"
+                "id": "5",
+                "text": "Example of Work activities."
               }
             ]
           },
           {
-            "title": "SABADO",
+            "title": "SATURDAY",
             "descriptionList": [
               {
-                "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
-                "id": "2",
-                "text": "Resolver Problema Y"
-              },
-              {
-                "id": "3",
-                "text": "Resolver Problema XPTO"
+                "id": "6",
+                "text": "Example of Work activities."
               }
             ]
           },
           {
-            "title": "DOMINGO",
+            "title": "SUNDAY",
             "descriptionList": [
               {
-                "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
-                "id": "2",
-                "text": "Resolver Problema Y"
-              },
-              {
-                "id": "3",
-                "text": "Resolver Problema XPTO"
+                "id": "7",
+                "text": "Example of Work activities."
               }
             ]
           }
@@ -147,99 +91,71 @@
         "id": "per-todo",
         "order": "3",
         "title": "[PER] TODO LIST",
-        "description": "[PROFISSIONAL] TODO LIST",
+        "description": "[PERSONAL] TODO LIST",
         "link": "per-todo",
         "isVisible": true,
         "showOnDashboard": true,
         "itemsContent": [
           {
-            "title": "SEGUNDA-FEIRA",
+            "title": "MONDAY",
             "descriptionList": [
               {
                 "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
-                "id": "2",
-                "text": "Resolver Problema Y"
+                "text": "Example of personal activities."
               }
             ]
           },
           {
-            "title": "TERÇA-FEIRA",
+            "title": "TUESDAY",
             "descriptionList": [
               {
-                "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
                 "id": "2",
-                "text": "Resolver Problema Y"
+                "text": "Example of personal activities."
               }
             ]
           },
           {
-            "title": "QUARTA-FEIRA",
+            "title": "WEDNESDAY",
             "descriptionList": [
               {
-                "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
-                "id": "2",
-                "text": "Resolver Problema Y"
+                "id": "3",
+                "text": "Example of personal activities."
               }
             ]
           },
           {
-            "title": "QUINTA-FEIRA",
+            "title": "THURSDAY",
             "descriptionList": [
               {
-                "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
-                "id": "2",
-                "text": "Resolver Problema Y"
+                "id": "4",
+                "text": "Example of personal activities."
               }
             ]
           },
           {
-            "title": "SEXTA-FEIRA",
+            "title": "FRIDAY",
             "descriptionList": [
               {
-                "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
-                "id": "2",
-                "text": "Resolver Problema Y"
+                "id": "5",
+                "text": "Example of personal activities."
               }
             ]
           },
           {
-            "title": "SABADO",
+            "title": "SATURDAY",
             "descriptionList": [
               {
-                "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
-                "id": "2",
-                "text": "Resolver Problema Y"
+                "id": "6",
+                "text": "Example of personal activities."
               }
             ]
           },
           {
-            "title": "DOMINGO",
+            "title": "SUNDAY",
             "descriptionList": [
               {
-                "id": "1",
-                "text": "Resolver Problema X"
-              },
-              {
-                "id": "2",
-                "text": "Resolver Problema Y"
+                "id": "7",
+                "text": "Example of personal activities."
               }
             ]
           }
@@ -255,22 +171,22 @@
         "showOnDashboard": true,
         "itemsContent": [
           {
-            "title": "NOTE 1",
+            "title": "NOTE 1 (TODO/ISSUE: GET THIS VALUE)",
             "descriptionList": [
               {
                 "id": "1",
-                "title": "COMPRAR BANANA",
-                "description": "COMPRAR BANANA"
+                "title": "NOTE_1",
+                "description": "Example of annotation."
               }
             ]
           },
           {
-            "title": "NOTE 2",
+            "title": "NOTE 2 (TODO/ISSUE: GET THIS VALUE)",
             "descriptionList": [
               {
                 "id": "2",
-                "title": "PAGAR CONTA DE LUZ",
-                "description": "PAGAR CONTA DE LUZ"
+                "title": "NOTE_2",
+                "description": "Example of annotation."
               }
             ]
           }
@@ -290,18 +206,23 @@
             "descriptionList": [
               {
                 "id": "1",
-                "dateAndTime": "05/10/2025 11:00am",
-                "text": "Cortar o Cabelo"
+                "dateAndTime": "07/10/2025 11:00pm",
+                "text": "Example of scheduled events."
               },
               {
                 "id": "2",
-                "dateAndTime": "15/10/2025 08:00am",
-                "text": "Lavar o carro"
+                "dateAndTime": "15/10/2025 07:00am",
+                "text": "Example of scheduled events."
               },
               {
                 "id": "3",
-                "dateAndTime": "17/10/2025 13:00pm",
-                "text": "Fazer checkin do Hotel"
+                "dateAndTime": "25/10/2025 8:30am",
+                "text": "Example of scheduled events."
+              },
+              {
+                "id": "4",
+                "dateAndTime": "28/10/2025 08:00am",
+                "text": "Example of scheduled events."
               }
             ]
           }

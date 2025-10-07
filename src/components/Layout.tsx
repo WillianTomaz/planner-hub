@@ -38,7 +38,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             className="menu-toggle" 
             onClick={() => setIsMobileMenuOpen(true)}
         >
-          ☰ MENU
+          ☰
         </button>
         
         {/* NOVO: Div para o Título e Ícone */}
@@ -51,12 +51,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         
         {/* Status e Botão SAVE */}
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div className="save-status-container" style={{ marginRight: 'var(--spacing-md)' }}>
+          <div className="save-status-container" style={{ textAlign: 'center',  display: 'flex', flexDirection: 'column' }}>
             <span className={`save-status ${saveStatus === 'Not Saved' ? 'status-not-saved' : 'status-saved'}`}>
               {saveStatus}
             </span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--color-secondary)', marginLeft: 'var(--spacing-sm)' }}>
-              Último: {lastSaveTime}
+            <span style={{ fontSize: '0.75rem', color: 'var(--color-secondary)' }}>
+              Last Sync: {lastSaveTime}
             </span>
           </div>
           
@@ -64,7 +64,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             className="save-button" 
             onClick={handleSave} // Chama exportData
           >
-            SAVE / EXPORT
+            SAVE
           </button>
         </div>
       </header>

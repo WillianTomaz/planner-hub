@@ -19,7 +19,7 @@ export const Identification: React.FC = () => {
     }
     // Set current time for display
     const now = new Date();
-    setTimestamp(now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) + ' ' + now.toLocaleDateString('en-US'));
+    setTimestamp(now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + ' ' + now.toLocaleDateString('pt-BR'));
   }, [isAuthenticated, navigate]);
 
   const handleEnter = () => {

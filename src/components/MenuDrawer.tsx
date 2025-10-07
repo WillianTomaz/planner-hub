@@ -68,10 +68,10 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({ isOpen, onClose, onExpor
         <div className="menu-actions">
           {/* Botões de Ação com novo estilo */}
           <button className="action-btn reset-btn" onClick={resetData}>
-            RESETAR DADOS
+            RESET DATA
           </button>
           <button className="action-btn export-btn" onClick={onExport}>
-            SALVAR E EXPORTAR
+            SAVE AND EXPORT
           </button>
         </div>
       </div>
