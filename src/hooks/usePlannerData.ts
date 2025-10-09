@@ -1,11 +1,9 @@
-// src/hooks/usePlannerData.ts
 import { useState, useEffect, useCallback } from 'react';
 import type { PlannerData } from '../types/planner'; 
 
 const STORAGE_KEY = 'plannerHub_data';
 
 // --- Utility Functions ---
-
 /** Loads the default JSON file from the public folder. */
 const loadDefaultConfig = async (): Promise<PlannerData> => {
   try {
@@ -27,17 +25,16 @@ const loadDefaultConfig = async (): Promise<PlannerData> => {
   }
 };
 
-/**
- * NOVO: Salva o estado atual no LocalStorage imediatamente para garantir a persistência
- * após qualquer alteração (updatePlannerData). Mantém o status atual ('Not Saved' ou 'Saved').
+/** Save the current state to LocalStorage immediately to ensure persistence
+ *  after any change (updatePlannerData). Keep the current status ("Unsaved" or "Saved").
  */
 const saveToLocalStorageLive = (data: PlannerData) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 };
 
 
-/** * Renomeada para clareza. Salva no LocalStorage E atualiza o status para 'Saved'.
- * Usada apenas para salvações explícitas (Botão SAVE ou Export).
+/** Saves to LocalStorage and updates the status to "Saved."
+ *  Used only for explicit saves (SAVE or Export button).
  */
 const saveToLocalStorageExplicit = (data: PlannerData): PlannerData => {
   const dataToSave = { ...data };
@@ -50,7 +47,6 @@ const saveToLocalStorageExplicit = (data: PlannerData): PlannerData => {
 };
 
 // --- Main Hook ---
-
 export const usePlannerData = () => {
   const [data, setData] = useState<PlannerData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -89,7 +85,7 @@ export const usePlannerData = () => {
       // Update the save status to 'Not Saved'
       updatedData.appConfig[0].saveStatus = 'Not Saved';
       
-      // *** CORREÇÃO DE PERSISTÊNCIA: Salva os dados no LocalStorage imediatamente ***
+      // Saves data to LocalStorage immediately.
       saveToLocalStorageLive(updatedData); 
       
       return updatedData;
@@ -99,7 +95,7 @@ export const usePlannerData = () => {
   // 3. Function to explicitly save to LocalStorage (e.g., on Save button click)
   const saveLocalState = useCallback(() => {
     if (data) {
-      // Usa saveToLocalStorageExplicit para atualizar status e timestamp
+      // Uses saveToLocalStorageExplicit to update status and timestamp
       const savedData = saveToLocalStorageExplicit(data);
       setData(savedData); // Update state with the 'Saved' status and timestamp
       console.log('Application state saved to LocalStorage.');
@@ -122,7 +118,7 @@ export const usePlannerData = () => {
     if (!data) return;
 
     // 5.1. Ensure the latest changes are saved to LocalStorage first
-    // Usa saveToLocalStorageExplicit para atualizar status/timestamp E salvar no localStorage
+    // Use saveToLocalStorageExplicit to update status/timestamp AND save to localStorage
     const finalData = saveToLocalStorageExplicit(data); 
     setData(finalData); // Update state to reflect 'Saved' status before export
 
