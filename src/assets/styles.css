@@ -17,8 +17,8 @@
     --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
-    --spacing-lg: 24px;
-    --spacing-xl: 32px;
+    --spacing-lg: 20px;
+    --spacing-xl: 28px;
 }
 
 /* Base Styles */
@@ -68,7 +68,7 @@ p {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-md) var(--spacing-lg);
+    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-lg);
     background-color: rgba(30, 30, 30, 0.95); /* Semi-transparente */
     border-bottom: 1px solid var(--color-border);
     position: sticky;
@@ -85,11 +85,22 @@ p {
     text-align: center;
 }
 
+.save-status-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+    text-align: center;
+}
+
 .save-status {
     padding: var(--spacing-xs) var(--spacing-sm);
-    margin-right: var(--spacing-md);
-    font-size: 0.8rem;
-    font-weight: 600;
+    margin-bottom: 2px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 700;
     border-radius: 20px; 
     text-transform: uppercase;
 }
@@ -260,6 +271,60 @@ button {
 .menu-actions {
     padding-top: var(--spacing-md);
     border-top: 1px solid var(--color-border);
+}
+
+/* Fixed menu actions at bottom of drawer */
+.menu-actions-fixed {
+  position: sticky;
+  bottom: 0;
+  /* background: #fff; */
+  padding: 16px 0 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* box-shadow: 0 -2px 8px rgba(0,0,0,0.04); */
+  z-index: 2;
+}
+
+/* Modern hamburger menu button */
+.modern-menu-toggle {
+  background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+  color: #fff;
+  height: 50px;
+  width: 50px;
+  border: none;
+  padding: 6px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.12);
+  transition: background 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.modern-menu-toggle:hover {
+  background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.18);
+}
+
+/* Modern save button */
+.modern-save-button {
+  background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+  color: #fff;
+  border: none;
+  /* padding: 8px 18px; */
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.12);
+  transition: background 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  /* margin-left: 16px; */
+}
+.modern-save-button:hover {
+  background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.18);
 }
 
 
@@ -477,13 +542,15 @@ button {
     display: flex;
     align-items: center;
     /* Move o título um pouco para a esquerda para centralizar visualmente */
-    transform: translateX(-10px); 
+    /* transform: translateX(-10px);  */
 }
 
 .app-icon {
     width: 72px; /* Tamanho do ícone */
     height: 72px;
-    margin-right: 8px; /* Espaço entre o ícone e o texto */
+    margin: 0px; /* Espaço entre o ícone e o texto */
+    padding: 0px;
+    align-items: end;
     /* Garante que o ícone pareça mais suave, útil para redimensionamento */
     image-rendering: -webkit-optimize-contrast; 
 }
@@ -515,14 +582,33 @@ button {
 }
 
 .link-to-full-page {
-    font-size: '0.8rem'; 
-    margin-top: '10px'; 
-    display: 'block'; 
-    color: #4574bb;
-    
+    /* font-size: '0.8rem';  */
+    /* margin-top: '10px';  */
+    /* display: 'block';  */
+    /* color: #4574bb; */
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-transform: uppercase;
+    margin-top: var(--spacing-md);
+    padding: 10px;
+    font-size: 0.9rem;
+    width: 100%;
+    background-color: var(--color-surface);
+    color: var(--color-secondary);
+    box-shadow: none;
+    /* position: sticky; */
+    bottom: 0px; /* Adjust as needed for spacing from the bottom */
+    /* right: 20px; */
 }
 .link-to-full-page:hover {
     cursor: pointer;
-    color: #A3C9FF;
-    transform: translateY(-1px);
+    background-color: var(--color-surface-hover);
+    color: var(--color-text);
+}
+
+.dashboard-content-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

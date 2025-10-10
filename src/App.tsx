@@ -1,5 +1,5 @@
 // src/App.tsx
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { usePlannerData } from './hooks/usePlannerData';
 import { Layout } from './components/Layout';
 import { Identification } from './pages/Identification';

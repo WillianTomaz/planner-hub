@@ -52,7 +52,7 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
             
             if (dailySection) {
                 // CAPTURE SECTION TITLE
-                dailySectionTitle = dailySection.title;
+                dailySectionTitle = (dailySection.title).toUpperCase();
                 
                 // Returns up to 3 uncompleted tasks for the day
                 selectedItems = (dailySection.descriptionList as TodoItem[])
@@ -65,6 +65,7 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
             const allNotes = itemsContent.flatMap(section => section.descriptionList as AnnotationItem[]);
             
             if (allNotes.length > 0) {
+                dailySectionTitle = (allNotes[allNotes.length - 1].title).toUpperCase();
                 selectedItems = [allNotes[allNotes.length - 1]]; 
             }
             
@@ -144,7 +145,7 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
             const annotation = item as AnnotationItem;
             const snippet = annotation.description.length > 50 ? annotation.description.substring(0, 50) + '...' : annotation.description;
             // Ensures bold text is visible, but may require a Markdown component for actual rendering.
-            return `${annotation.title}: ${snippet}`; 
+            return `${snippet}`; 
         }
         return 'Item de Conteúdo Inválido';
     };
@@ -173,7 +174,7 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
     }
 
     return (
-        <div style={{ marginTop: '10px' }}>
+        <div className="dashboard-content-preview" style={{ marginTop: '10px' }}>
             
             {/* NEW: Displays the day's section title (TODO List) or status (Schedule) */}
             {dailySectionTitle && (
@@ -188,11 +189,14 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
                     <p 
                         key={(item as any).id || index} 
                         style={{ 
-                            fontSize: '0.9rem', 
-                            margin: '4px 0', 
-                            whiteSpace: 'pre-wrap',
-                            // Estiliza o texto do título da anotação
-                            fontWeight: 'title' in item ? 'bold' : 'normal'
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            verticalAlign: 'middle', 
+                            minHeight: '0px',
+                            fontSize: '1.0rem', 
+                            margin: '10px 0', 
+                            whiteSpace: 'prewrap',
                         }}
                     >
                         {formatItemDisplay(item)}
@@ -226,12 +230,22 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
 
 export const Dashboard: React.FC = () => {
     const { data } = usePlannerData();
-    
+        
     const timestamp = useMemo(() => {
         const now = new Date();
-        // Formato para exibição
-        return `${now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })} ${now.toLocaleDateString('pt-BR')}`;
-    }, []);
+        const time = now.toLocaleTimeString('pt-BR', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+        const dateOptions = {
+            weekday: 'long', // Friday
+            year: 'numeric', // 2024
+            month: 'long',   // October
+            day: '2-digit',  // 09
+        };
+        const date = now.toLocaleDateString('en-US', dateOptions);
+        return `${time} | ${date}`;
+    }, []); 
 
     // Filtra itens do menu para exibir no dashboard, garantindo que tenham conteúdo
     const dashboardItems = useMemo(() => {
@@ -264,7 +278,7 @@ export const Dashboard: React.FC = () => {
                     {dashboardItems.map(item => (
                         <div key={item.id} className="card dashboard-card">
                             {/* Main Item Title (Ex: [PRO] TODO LIST) */}
-                            <h3 style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: '8px', marginBottom: '8px' }}>
+                            <h3 style={{ textAlign: 'center', borderBottom: '1px solid var(--color-border)', paddingBottom: '8px', marginBottom: '8px' }}>
                                 {item.description}
                             </h3>
                             

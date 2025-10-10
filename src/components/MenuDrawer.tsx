@@ -56,7 +56,6 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({ isOpen, onClose, onExpor
               <a
                 key={item.id}
                 className="menu-item"
-                // Uses the robust click function
                 onClick={(e) => handleMenuItemClick(e, item.id)} 
               >
                 {item.title}
@@ -64,7 +63,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({ isOpen, onClose, onExpor
             ))}
         </nav>
 
-        <div className="menu-actions">
+        <div className="menu-actions-fixed">
           <button className="action-btn reset-btn" onClick={resetData}>
             RESET DATA
           </button>

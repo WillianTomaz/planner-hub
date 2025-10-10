@@ -34,7 +34,9 @@ const ScheduleEntry: React.FC<{
                 <span style={{ fontWeight: 600, color: 'var(--color-primary)', minWidth: '150px', display: 'inline-block' }}>
                     {formatDateTime(item.dateAndTime)}
                 </span> 
-                {item.text}
+                <span style={{ marginLeft: '10px' }}>
+                    {item.text}
+                </span>
             </p>
             <div className="task-actions" style={{ minWidth: '100px' }}>
                 <button 
@@ -223,6 +225,8 @@ export const Schedule: React.FC = () => {
                         onClick={handleAdd}
                         disabled={!newItemText.trim()}
                         style={{ 
+                            textAlign: 'center',
+                            width: '100px',
                             borderRadius: '0 8px 8px 0',
                             padding: 'var(--spacing-sm) var(--spacing-lg)'
                         }}

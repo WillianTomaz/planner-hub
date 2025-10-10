@@ -33,12 +33,17 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         
       {/* HEADER: Botão de Menu, Título, Status e Botão SAVE */}
       <header className="planner-header">
-        {/* Botão de Menu para mobile */}
+        {/* Modern Hamburger Menu Button */}
         <button 
-            className="menu-toggle" 
+            className="menu-toggle modern-menu-toggle" 
             onClick={() => setIsMobileMenuOpen(true)}
+            aria-label="Open menu"
         >
-          ☰
+          <svg viewBox="0 0 32 32">
+            <rect y="7" width="32" height="3" rx="1.5" fill="#fff"/>
+            <rect y="15" width="32" height="3" rx="1.5" fill="#fff"/>
+            <rect y="23" width="32" height="3" rx="1.5" fill="#fff"/>
+          </svg>
         </button>
         
         {/* NOVO: Div para o Título e Ícone */}
@@ -51,7 +56,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         
         {/* Status e Botão SAVE */}
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div className="save-status-container" style={{ textAlign: 'center',  display: 'flex', flexDirection: 'column' }}>
+          <div className="save-status-container">
             <span className={`save-status ${saveStatus === 'Not Saved' ? 'status-not-saved' : 'status-saved'}`}>
               {saveStatus}
             </span>
@@ -60,10 +65,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </span>
           </div>
           
-          <button 
-            className="save-button" 
-            onClick={handleSave} // Chama exportData
-          >
+          <button className="save-button modern-save-button" onClick={handleSave} aria-label="Save">
             SAVE
           </button>
         </div>

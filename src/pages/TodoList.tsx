@@ -182,7 +182,7 @@ export const TodoList: React.FC<TodoListProps> = ({ categoryId }) => {
   };
 
 
-  const title = menuItem?.title || 'Loading List...';
+  const title = menuItem?.description || 'Loading List...';
   const sections = (menuItem?.itemsContent as ItemContent[]) || [];
 
   return (
