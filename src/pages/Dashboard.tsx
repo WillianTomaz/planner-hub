@@ -237,7 +237,7 @@ export const Dashboard: React.FC = () => {
             hour: '2-digit', 
             minute: '2-digit' 
         });
-        const dateOptions = {
+        const dateOptions: Intl.DateTimeFormatOptions = {
             weekday: 'long', // Friday
             year: 'numeric', // 2024
             month: 'long',   // October
