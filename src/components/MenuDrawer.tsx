@@ -64,10 +64,10 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({ isOpen, onClose, onExpor
         </nav>
 
         <div className="menu-actions-fixed">
-          <button className="action-btn reset-btn" onClick={resetData}>
+          <button className="btn-data" onClick={resetData}>
             RESET DATA
           </button>
-          <button className="action-btn export-btn" onClick={onExport}>
+          <button className="btn-data" onClick={onExport}>
             SAVE AND EXPORT
           </button>
         </div>

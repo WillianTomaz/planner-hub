@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'; // Adicionando useRe
 import { useNavigate } from 'react-router-dom';
 import { usePlannerData } from '../hooks/usePlannerData';
 import type { PlannerData } from '../types/planner'; // Assumindo que o erro de importação foi resolvido
+// import plannerhubIcon from '../assets/plannerhub-favicon.png'; 
 
 export const Identification: React.FC = () => {
   const { data, isAuthenticated, updatePlannerData } = usePlannerData();
@@ -99,23 +100,32 @@ export const Identification: React.FC = () => {
   return (
     <div className="identification-container">
       <div className="identification-card card">
-        <div className={`save-status status-saved`}>Saved</div>
-        <p style={{ marginTop: '8px', fontSize: '0.85rem' }}>{timestamp}</p>
+        <div className="save-status-container">
+          <div className="save-status status-saved ">Saved</div> 
+          <div style={{ margin: '0px', fontSize: '0.85rem' }}>{timestamp}</div>
+        </div>
+        <div className="app-title-container">
+          {/* <img src={plannerhubIcon} alt="Planner Hub Icon" className="app-icon" /> */}
+          <h1 className="app-title" style={{ fontSize: '2rem' }}>
+            {data?.menuConfig.menuTitle || "Planner HUB"}
+          </h1>
+        </div>
         
-        <h2 style={{ marginTop: '30px' }}>IDENTIFICATION</h2>
-        
-        <div className="form-group">
-          <label htmlFor="username">USERNAME</label>
+        <div className="form-group" style={{ textAlign: "initial", }}>
+          <label style={{ fontWeight: 500, margin: '50px 0 10px 0'}}>
+            USERNAME:
+          </label>
           <input 
+            style={{ margin: '0 0 30px 0' }}
             type="text" 
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="USERNAME"
+            placeholder="username"
           />
         </div>
         
-        <button onClick={handleEnter} className="menu-toggle" style={{ width: '100%', marginBottom: '16px' }}>
+        <button onClick={handleEnter} className="modern-menu-toggle" style={{ width: '100%', marginBottom: '16px' }}>
           ENTER
         </button>
         
@@ -128,10 +138,11 @@ export const Identification: React.FC = () => {
             onChange={handleFileChange} 
             style={{ display: 'none' }}
           />
-          <button onClick={triggerImportClick}>
+          {/* TODO: Criar classes dos botões e padronizar com todos que possuem o btn (menu lateral) */}
+          <button className="btn-data" onClick={triggerImportClick}>
             IMPORT DATA
           </button>
-          <button onClick={handleResetData}>
+          <button className="btn-data" onClick={handleResetData}>
             RESET DATA
           </button>
         </div>

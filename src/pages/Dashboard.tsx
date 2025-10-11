@@ -3,6 +3,8 @@ import { usePlannerData } from '../hooks/usePlannerData';
 import { useNavigate } from 'react-router-dom';
 
 import type { MenuItem, ItemContent, TodoItem, AnnotationItem, ScheduleItem, DescriptionItem } from '../types/planner';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Utility function to get the current day of the week in Portuguese
 const getWeekDayName = (date: Date): string => {
@@ -174,7 +176,7 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
     }
 
     return (
-        <div className="dashboard-content-preview" style={{ marginTop: '10px' }}>
+        <div className="dashboard-content-preview" >
             
             {/* NEW: Displays the day's section title (TODO List) or status (Schedule) */}
             {dailySectionTitle && (
@@ -217,10 +219,10 @@ const DashboardContentPreview: React.FC<{ item: MenuItem & { itemsContent: ItemC
             
             {/* Adds a link to the full page */}
             {item.link && (
-                <a className="link-to-full-page"
+                <a className="link-to-full-page"                    
                     key={item.id}
                     onClick={(e) => handleMenuItemClick(e, item.id)} >
-                    {item.description}
+                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} /> {item.description}
                 </a>
             )}
         </div>

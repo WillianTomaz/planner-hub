@@ -2,6 +2,8 @@
 import React, { useMemo } from 'react';
 import { usePlannerData } from '../hooks/usePlannerData';
 import type { TodoItem, ItemContent } from '../types/planner';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 interface TodoListProps {
   categoryId: 'pro-todo' | 'per-todo';
@@ -60,11 +62,12 @@ const DailyTaskList: React.FC<{
         </div>
       ))}
       {/* NOVO: Botão ADD TASK funcional */}
+      {/* TODO: Padronizar esse botão com os do internos da dashboard "link-to-full-page" */}
       <button 
-        style={{ marginTop: '10px', width: '100%', background: 'var(--color-surface-hover)', color: 'var(--color-text)', border: '1px dashed var(--color-border)' }}
+        style={{ marginTop: '10px', width: '100%', background: 'var(--color-surface-hover)', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}
         onClick={() => onAddTask(sectionTitle)}
       >
-        + ADD TASK
+        <FontAwesomeIcon icon={faPlus} /> ADD TASK
       </button>
     </div>
   );

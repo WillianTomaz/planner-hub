@@ -2,6 +2,8 @@
 import React, { useMemo } from 'react';
 import { usePlannerData } from '../hooks/usePlannerData';
 import type { ItemContent, AnnotationItem } from '../types/planner';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 // Reusable component for a single annotation card
 const AnnotationCard: React.FC<{ 
@@ -32,7 +34,7 @@ const AnnotationCard: React.FC<{
                     marginLeft: '8px'
                 }}
             >
-                📝
+              <FontAwesomeIcon icon={faPenToSquare} />
             </button>
         </div>
         
@@ -49,14 +51,14 @@ const AnnotationCard: React.FC<{
             className="edit-btn" 
             style={{ color: 'var(--color-primary)', padding: '4px 8px' }}
         >
-            EDIT CONTENT
+          <FontAwesomeIcon icon={faPenToSquare} /> EDIT
         </button>
         <button 
             onClick={() => onDelete(item.id, sectionTitle)} 
             className="delete-btn" 
             style={{ color: 'var(--color-danger)', padding: '4px 8px', marginLeft: '8px' }}
         >
-            DELETE NOTE
+          <FontAwesomeIcon icon={faTrash} /> DELETE
         </button>
       </div>
     </div>
@@ -218,14 +220,12 @@ export const Annotations: React.FC = () => {
           ))
         ))}
       </div>
-
-      <button 
-            className="menu-toggle" 
-            onClick={handleAdd}
-            style={{ width: '100%', padding: '10px 0', marginTop: '20px' }}
-        >
-            + ADD NOTE
-        </button>
+      <div style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'center', flexDirection: "row", marginTop: '20px'}}>
+        <button 
+          className="modern-menu-toggle" onClick={handleAdd} style={{ width: '50%', padding: '10px 0'}}>
+            <FontAwesomeIcon icon={faPlus} /> ADD NOTE
+          </button>
+      </div>
     </div>
   );
 };

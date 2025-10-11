@@ -221,7 +221,7 @@ export const Schedule: React.FC = () => {
                         }}
                     />
                     <button 
-                        className="menu-toggle" 
+                        className="modern-menu-toggle" 
                         onClick={handleAdd}
                         disabled={!newItemText.trim()}
                         style={{ 
