@@ -518,6 +518,10 @@ button {
 }
 
 @media (max-width: 425px) {
+    .app-title {
+        padding: 10px;
+        font-size: 1.5rem !important;
+    }
     .app-icon {
         display: none;
     }
