@@ -42,7 +42,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({ isOpen, onClose, onExpor
       {/* The inner div prevents closing when clicking on the menu content */}
       <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
         <div className="menu-header menu-header-icon">
-            <img src={plannerhubIcon} alt="Planner Hub Icon" className="app-icon" />
+            <img src={plannerhubIcon} alt="Planner Hub Icon" className="app-icon-drawer" />
         </div>
         
         {/* Close button with new style */}

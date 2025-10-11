@@ -258,19 +258,7 @@ export const Dashboard: React.FC = () => {
     return (
         <div className="page-container dashboard-page">
             {/* Date/Time Display */}
-            <div style={{ 
-                // position: 'absolute', 
-                // top: '30px', 
-                // right: '30px', 
-                fontSize: '1.5rem', 
-                fontWeight: '600',
-                backgroundColor: 'var(--color-surface)',
-                borderRadius: '10px',
-                padding: '8px',
-                marginBottom: "35px",
-                textAlign: 'center',
-
-            }}>
+            <div className="dashboard-time-content">
                 {timestamp}
             </div>
             <div>

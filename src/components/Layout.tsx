@@ -39,7 +39,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Open menu"
         >
-          <svg viewBox="0 0 32 32">
+          <svg x="0" y="0" width="100%" height="100%"  viewBox="0 0 32 32">
             <rect y="7" width="32" height="3" rx="1.5" fill="#fff"/>
             <rect y="15" width="32" height="3" rx="1.5" fill="#fff"/>
             <rect y="23" width="32" height="3" rx="1.5" fill="#fff"/>
