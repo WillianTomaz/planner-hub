@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePlannerData } from '../hooks/usePlannerData';
-import plannerhubIcon from '../assets/plannerhub-favicon.png'; 
+import plannerhubIcon from '../assets/plannerhub-icon.png'; 
 
 interface MenuDrawerProps {
   isOpen: boolean;

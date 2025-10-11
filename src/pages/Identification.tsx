@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'; // Adicionando useRe
 import { useNavigate } from 'react-router-dom';
 import { usePlannerData } from '../hooks/usePlannerData';
 import type { PlannerData } from '../types/planner'; // Assumindo que o erro de importação foi resolvido
-// import plannerhubIcon from '../assets/plannerhub-favicon.png'; 
+// import plannerhubIcon from '../assets/plannerhub-icon.png'; 
 
 export const Identification: React.FC = () => {
   const { data, isAuthenticated, updatePlannerData } = usePlannerData();
