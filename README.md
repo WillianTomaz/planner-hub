@@ -1,19 +1,27 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/982304fa-1fa7-4d69-8993-75c6c7ab461f/deploy-status)](https://app.netlify.com/projects/planner-hub/deploys)
 
-# PLANNER HUB
+# 🚀 PLANNER HUB
 > A personal, single-page weekly planning application designed to work entirely in the browser using **LocalStorage** for persistent data storage. No backend or API is required, making it perfect for free deployment on GitHub Pages or Netlify.
 
-## Motivation
+## 🤟 Motivation
 > Tired of using paper planners, this project aims to create a highly functional, responsive digital planner. The core constraint—no database—is solved by leveraging browser storage and file export for backups, giving the user full control over their data.
 
-## Technologies Used
+## 🎁 Donate
+<p dir="auto">
+  <a href="https://www.buymeacoffee.com/williantomaz" rel="nofollow"> 
+    <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="WillianTomaz" style="max-width: 100%;">
+  </a>
+</p>
+<br/><br/>
+
+## ⚙️ Technologies Used
 * **Framework:** React v18+
 * **Language:** TypeScript
 * **Bundler:** Vite
 * **Styling:** Modern CSS (Flexbox/Grid for responsiveness)
 * **Data Management:** LocalStorage & JSON
 
-## Project Architecture Flow (Mermaid Diagram)
+## 🏗️ Project Architecture Flow (Mermaid Diagram)
 ```mermaid
 graph TD
     A[User Loads App] --> B{Check LocalStorage};
