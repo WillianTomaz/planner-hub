@@ -1,9 +1,12 @@
 // src/pages/TodoList.tsx
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { usePlannerData } from '../hooks/usePlannerData';
 import type { TodoItem, ItemContent } from '../types/planner';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FormModal } from '../components/FormModal';
+import { EditModal } from '../components/EditModal';
+import { ConfirmModal } from '../components/ConfirmModal';
 
 interface TodoListProps {
   categoryId: 'pro-todo' | 'per-todo';
@@ -75,6 +78,14 @@ const DailyTaskList: React.FC<{
 
 export const TodoList: React.FC<TodoListProps> = ({ categoryId }) => {
   const { data, updatePlannerData } = usePlannerData();
+  
+  // Modal states
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<{ task: TodoItem; sectionTitle: string } | null>(null);
+  const [deletingTask, setDeletingTask] = useState<{ taskId: string; sectionTitle: string } | null>(null);
+  const [currentSection, setCurrentSection] = useState<string>('');
 
   const menuItem = useMemo(() => {
     return data?.menuConfig.menuItems.find(item => item.id === categoryId);
@@ -126,11 +137,16 @@ export const TodoList: React.FC<TodoListProps> = ({ categoryId }) => {
 
   // 2. NOVO: Lógica para DELETAR uma tarefa
   const handleDeleteTask = (taskId: string, sectionTitle: string) => {
-    if (!window.confirm("Are you sure you want to delete this task?")) return;
+    setDeletingTask({ taskId, sectionTitle });
+    setIsDeleteModalOpen(true);
+  };
 
-    const newItemsContent = mapItemsContent(sectionTitle, (tasks) => {
+  const handleConfirmDelete = () => {
+    if (!deletingTask) return;
+
+    const newItemsContent = mapItemsContent(deletingTask.sectionTitle, (tasks) => {
       // Filtra a tarefa com o ID especificado
-      return tasks.filter(item => item.id !== taskId);
+      return tasks.filter(item => item.id !== deletingTask.taskId);
     });
     if (newItemsContent) {
       updateItemsContentInState(newItemsContent);
@@ -144,15 +160,17 @@ export const TodoList: React.FC<TodoListProps> = ({ categoryId }) => {
     
     if (!currentTask) return;
 
-    const newText = window.prompt("Edit Task:", currentTask.text);
-    
-    if (newText === null || newText.trim() === currentTask.text) return; // Se cancelou ou não mudou
-    
-    const newItemsContent = mapItemsContent(sectionTitle, (tasks) => {
-      // Mapeia e atualiza o texto da tarefa
+    setEditingTask({ task: currentTask, sectionTitle });
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveEdit = (formData: any) => {
+    if (!editingTask) return;
+
+    const newItemsContent = mapItemsContent(editingTask.sectionTitle, (tasks) => {
       return tasks.map(item => {
-        if (item.id === taskId) {
-          return { ...item, text: newText.trim() };
+        if (item.id === editingTask.task.id) {
+          return { ...item, text: formData.text.trim(), completed: formData.completed };
         }
         return item;
       });
@@ -164,19 +182,19 @@ export const TodoList: React.FC<TodoListProps> = ({ categoryId }) => {
 
   // 4. NOVO: Lógica para ADICIONAR uma nova tarefa
   const handleAddTask = (sectionTitle: string) => {
-    const newTaskText = window.prompt("Enter new task description:");
-    
-    if (!newTaskText || newTaskText.trim() === "") return;
+    setCurrentSection(sectionTitle);
+    setIsAddModalOpen(true);
+  };
 
-    const newId = Date.now().toString(); // ID simples baseado em timestamp
+  const handleSaveAdd = (formData: any) => {
+    const newId = Date.now().toString();
     const newTask: TodoItem = { 
         id: newId, 
-        text: newTaskText.trim(), 
+        text: formData.text.trim(), 
         completed: false 
     };
 
-    const newItemsContent = mapItemsContent(sectionTitle, (tasks) => {
-      // Adiciona a nova tarefa ao final da lista
+    const newItemsContent = mapItemsContent(currentSection, (tasks) => {
       return [...tasks, newTask];
     });
     if (newItemsContent) {
@@ -187,6 +205,33 @@ export const TodoList: React.FC<TodoListProps> = ({ categoryId }) => {
 
   const title = menuItem?.description || 'Loading List...';
   const sections = (menuItem?.itemsContent as ItemContent[]) || [];
+
+  // Modal field configurations
+  const addTaskFields = [
+    {
+      name: 'text',
+      label: 'Task Description',
+      type: 'text' as const,
+      required: true,
+      placeholder: 'Enter task description...'
+    }
+  ];
+
+  const editTaskFields = [
+    {
+      name: 'text',
+      label: 'Task Description',
+      type: 'text' as const,
+      required: true,
+      placeholder: 'Enter task description...'
+    },
+    {
+      name: 'completed',
+      label: 'Completed',
+      type: 'checkbox' as const,
+      required: false
+    }
+  ];
 
   return (
     <div className="page-container todo-page">
@@ -204,6 +249,48 @@ export const TodoList: React.FC<TodoListProps> = ({ categoryId }) => {
           />
         ))}
       </div>
+
+      {/* Add Task Modal */}
+      <FormModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSubmit={handleSaveAdd}
+        title="Add New Task"
+        fields={addTaskFields}
+        submitButtonText="ADD TASK"
+      />
+
+      {/* Edit Task Modal */}
+      <EditModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingTask(null);
+        }}
+        onSave={handleSaveEdit}
+        title="Edit Task"
+        fields={editTaskFields}
+        initialData={editingTask ? {
+          text: editingTask.task.text,
+          completed: editingTask.task.completed || false
+        } : {}}
+        saveButtonText="SAVE CHANGES"
+      />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setDeletingTask(null);
+        }}
+        onConfirm={handleConfirmDelete}
+        title="Delete Task"
+        message="Are you sure you want to delete this task? This action cannot be undone."
+        confirmText="DELETE"
+        cancelText="CANCEL"
+        type="danger"
+      />
     </div>
   );
 };

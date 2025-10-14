@@ -2,6 +2,11 @@
 import React, { useMemo, useState } from 'react';
 import { usePlannerData } from '../hooks/usePlannerData';
 import type { ItemContent, ScheduleItem } from '../types/planner';
+import { FormModal } from '../components/FormModal';
+import { EditModal } from '../components/EditModal';
+import { ConfirmModal } from '../components/ConfirmModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 // Reusable component for a single schedule item
 const ScheduleEntry: React.FC<{ 
@@ -10,11 +15,8 @@ const ScheduleEntry: React.FC<{
     onDelete: (id: string) => void,
 }> = ({ item, onEdit, onDelete }) => {
     
-    // Formata a data e hora para exibição
     const formatDateTime = (dateTimeStr: string) => {
         try {
-            // Tenta criar um objeto Date.
-            // Se o formato for "MM/DD/YYYY HH:mmAM/PM", funciona.
             const date = new Date(dateTimeStr);
             if (!isNaN(date.getTime())) {
                 const datePart = date.toLocaleDateString('pt-BR');
@@ -22,7 +24,6 @@ const ScheduleEntry: React.FC<{
                 return `[${datePart} ${timePart}]`;
             }
         } catch (e) {
-            // Retorna a string original se a formatação falhar
             return `[${dateTimeStr}]: [${e}]`;
         }
         return `[${dateTimeStr}]`;
@@ -60,9 +61,15 @@ const ScheduleEntry: React.FC<{
 
 export const Schedule: React.FC = () => {
     const { data, updatePlannerData } = usePlannerData();
-    const [newItemText, setNewItemText] = useState('');
     const SCHEDULE_ID = 'schedule';
-    const AGENDA_TITLE = 'MY AGENDA'; // Título fixo do bloco no JSON
+    const AGENDA_TITLE = 'MY AGENDA';
+
+    // Modal states
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [editingItem, setEditingItem] = useState<ScheduleItem | null>(null);
+    const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
 
     const scheduleItem = useMemo(() => {
         return data?.menuConfig.menuItems.find(item => item.id === SCHEDULE_ID);
@@ -70,10 +77,8 @@ export const Schedule: React.FC = () => {
 
     const agendaContent = (scheduleItem?.itemsContent as ItemContent[]) || [];
     
-    // Lista de todos os itens do agendamento (dentro de "MY AGENDA")
     const allScheduleItems = useMemo(() => {
         const agendaSection = agendaContent.find(s => s.title === AGENDA_TITLE);
-        // Ordena os itens por data e hora (simplificado: tenta ordenar pela string)
         const sortedItems = (agendaSection?.descriptionList || [])
             .slice()
             .sort((a, b) => 
@@ -85,13 +90,9 @@ export const Schedule: React.FC = () => {
         return sortedItems as ScheduleItem[];
     }, [agendaContent]);
 
-    // --- FUNÇÕES DE MANIPULAÇÃO DE ESTADO ---
-
-    // Função auxiliar para atualizar o itemsContent
     const updateAgendaInState = (newDescriptionList: ScheduleItem[]) => {
         if (!data) return;
 
-        // Atualiza a seção 'MY AGENDA' com a nova lista de agendamentos
         const newItemsContent = agendaContent.map(section => {
             if (section.title === AGENDA_TITLE) {
                 return { ...section, descriptionList: newDescriptionList };
@@ -107,32 +108,35 @@ export const Schedule: React.FC = () => {
         updatePlannerData({ menuConfig: newMenuConfig });
     };
 
-    // 1. NOVO: Lógica para DELETAR um item
     const handleDelete = (itemId: string) => {
-        if (!window.confirm("Confirm delete schedule item?")) return;
+        setDeletingItemId(itemId);
+        setIsDeleteModalOpen(true);
+    };
 
-        const newDescriptionList = allScheduleItems.filter(item => item.id !== itemId);
+    const handleConfirmDelete = () => {
+        if (!deletingItemId) return;
+
+        const newDescriptionList = allScheduleItems.filter(item => item.id !== deletingItemId);
         updateAgendaInState(newDescriptionList);
     };
 
-    // 2. NOVO: Lógica para EDITAR um item
     const handleEdit = (itemId: string) => {
         const currentItem = allScheduleItems.find(item => item.id === itemId);
         if (!currentItem) return;
 
-        const newText = window.prompt("Edit Task:", currentItem.text);
-        
-        if (newText === null || newText.trim() === currentItem.text) return; 
+        setEditingItem(currentItem);
+        setIsEditModalOpen(true);
+    };
 
-        // NOVO: Permite editar a data/hora também (opcional)
-        const newDateTime = window.prompt("Edit Date/Time (e.g., 05/10/2025 11:00am):", currentItem.dateAndTime);
-        
+    const handleSaveEdit = (formData: any) => {
+        if (!editingItem) return;
+
         const newDescriptionList = allScheduleItems.map(item => {
-            if (item.id === itemId) {
+            if (item.id === editingItem.id) {
                 return { 
                     ...item, 
-                    text: newText.trim(),
-                    dateAndTime: newDateTime?.trim() || currentItem.dateAndTime // Usa a nova data se fornecida
+                    text: formData.text.trim(),
+                    dateAndTime: formData.dateAndTime.trim()
                 };
             }
             return item;
@@ -141,34 +145,55 @@ export const Schedule: React.FC = () => {
         updateAgendaInState(newDescriptionList);
     };
 
-    // 3. NOVO: Lógica para ADICIONAR um novo item
     const handleAdd = () => {
-        if (!newItemText.trim()) return;
+        setIsAddModalOpen(true);
+    };
 
-        // Pede a data/hora
-        const dateTimeInput = window.prompt("Enter Date/Time for the schedule (e.g., 10/25/2025 10:00am):");
-        
-        if (!dateTimeInput || dateTimeInput.trim() === "") {
-             alert("Date/Time is required to add a schedule item.");
-             return;
-        }
-
+    const handleSaveAdd = (formData: any) => {
         const newId = Date.now().toString(); 
         const newItem: ScheduleItem = { 
             id: newId, 
-            text: newItemText.trim(), 
-            dateAndTime: dateTimeInput.trim()
+            text: formData.text.trim(), 
+            dateAndTime: formData.dateAndTime.trim()
         };
 
         const newDescriptionList = [...allScheduleItems, newItem];
         
         updateAgendaInState(newDescriptionList);
-        setNewItemText(''); // Limpa o input
     };
-    
-    // --- RENDERIZAÇÃO ---
 
     const title = scheduleItem?.title || 'Schedule';
+    const addScheduleFields = [
+        {
+            name: 'text',
+            label: 'Schedule Item',
+            type: 'text' as const,
+            required: true,
+            placeholder: 'Enter schedule item description...'
+        },
+        {
+            name: 'dateAndTime',
+            label: 'Date & Time',
+            type: 'datetime-local' as const,
+            required: true
+        }
+    ];
+
+    const editScheduleFields = [
+        {
+            name: 'text',
+            label: 'Schedule Item',
+            type: 'text' as const,
+            required: true,
+            placeholder: 'Enter schedule item description...'
+        },
+        {
+            name: 'dateAndTime',
+            label: 'Date & Time',
+            type: 'datetime-local' as const,
+            required: true
+        }
+    ];
 
     return (
         <div className="page-container schedule-page">
@@ -177,10 +202,7 @@ export const Schedule: React.FC = () => {
             <div className="card schedule-card">
                 <div className="task-list-header">
                     <h3>{AGENDA_TITLE}</h3>
-                    {/* Estes botões de ação na seção inteira não serão implementados por enquanto para manter o foco na funcionalidade por item */}
                     <div className="task-actions">
-                        {/* <button className="edit-btn" style={{ color: 'var(--color-primary)' }}>EDIT ALL</button>
-                        <button className="delete-btn" style={{ color: 'var(--color-danger)' }}>DELETE ALL</button> */}
                     </div>
                 </div>
                 
@@ -190,7 +212,6 @@ export const Schedule: React.FC = () => {
                             <ScheduleEntry 
                                 key={item.id} 
                                 item={item} 
-                                // Passa os manipuladores de evento
                                 onEdit={handleEdit}
                                 onDelete={handleDelete}
                             />
@@ -200,41 +221,64 @@ export const Schedule: React.FC = () => {
                     )}
                 </div>
                 
-                {/* Input/Button area at the bottom */}
-                <div style={{ display: 'flex', marginTop: '20px' }}>
-                    <input 
-                        type="text" 
-                        placeholder="Add New Schedule Item" 
-                        value={newItemText}
-                        onChange={(e) => setNewItemText(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleAdd();
-                        }}
-                        style={{ 
-                            flexGrow: 1, 
-                            padding: 'var(--spacing-sm) var(--spacing-md)', 
-                            border: '1px solid var(--color-border)', 
-                            borderRadius: '8px 0 0 8px',
-                            backgroundColor: 'var(--color-background)',
-                            color: 'var(--color-text)',
-                            fontSize: '1rem'
-                        }}
-                    />
+                {/* Add button area at the bottom */}
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '30px', width: '100%' }}>
                     <button 
                         className="modern-menu-toggle" 
                         onClick={handleAdd}
-                        disabled={!newItemText.trim()}
                         style={{ 
+                            width: '50%',
                             textAlign: 'center',
-                            width: '100px',
-                            borderRadius: '0 8px 8px 0',
-                            padding: 'var(--spacing-sm) var(--spacing-lg)'
+                            padding: 'var(--spacing-sm) var(--spacing-lg)',
+                            borderRadius: '8px'
                         }}
                     >
-                        ADD
+                        <FontAwesomeIcon icon={faPlus} /> ADD
                     </button>
                 </div>
             </div>
+
+            {/* Add Schedule Modal */}
+            <FormModal
+                isOpen={isAddModalOpen}
+                onClose={() => setIsAddModalOpen(false)}
+                onSubmit={handleSaveAdd}
+                title="Add New Schedule"
+                fields={addScheduleFields}
+                submitButtonText="Create"
+            />
+
+            {/* Edit Schedule Modal */}
+            <EditModal
+                isOpen={isEditModalOpen}
+                onClose={() => {
+                    setIsEditModalOpen(false);
+                    setEditingItem(null);
+                }}
+                onSave={handleSaveEdit}
+                title="Edit Schedule Item"
+                fields={editScheduleFields}
+                initialData={editingItem ? {
+                    text: editingItem.text,
+                    dateAndTime: editingItem.dateAndTime
+                } : {}}
+                saveButtonText="SAVE CHANGES"
+            />
+
+            {/* Delete Confirmation Modal */}
+            <ConfirmModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => {
+                    setIsDeleteModalOpen(false);
+                    setDeletingItemId(null);
+                }}
+                onConfirm={handleConfirmDelete}
+                title="Delete Schedule Item"
+                message="Are you sure you want to delete this schedule item? This action cannot be undone."
+                confirmText="DELETE"
+                cancelText="CANCEL"
+                type="danger"
+            />
         </div>
     );
 };

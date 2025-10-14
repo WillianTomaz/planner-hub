@@ -1,73 +1,73 @@
 // src/pages/Annotations.tsx
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { usePlannerData } from '../hooks/usePlannerData';
 import type { ItemContent, AnnotationItem } from '../types/planner';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { FormModal } from '../components/FormModal';
+import { EditModal } from '../components/EditModal';
+import { ConfirmModal } from '../components/ConfirmModal';
 
 // Reusable component for a single annotation card
 const AnnotationCard: React.FC<{ 
     item: AnnotationItem, 
     sectionTitle: string, 
-    onEditTitle: (id: string, sectionTitle: string) => void,       // Edita apenas o título
-    onEditDescription: (id: string, sectionTitle: string) => void, // Edita apenas a descrição (conteúdo)
+    onEdit: (id: string, sectionTitle: string) => void,  // Edita título e descrição juntos
     onDelete: (id: string, sectionTitle: string) => void 
-}> = ({ item, sectionTitle, onEditTitle, onEditDescription, onDelete }) => {
+}> = ({ item, sectionTitle, onEdit, onDelete }) => {
   return (
-    <div className="card annotation-card">
-      <div className="task-list-header" style={{ alignItems: 'flex-start', flexDirection: 'column' }}>
-        
-        {/* Título da Nota com botão de edição lateral */}
-        <div style={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between', marginBottom: '4px' }}>
-          <h3 style={{ margin: 0 }}>{item.title}</h3> 
-            <button 
-                onClick={() => onEditTitle(item.id, sectionTitle)} 
-                title="Edit Note Title"
-                style={{ 
-                    background: 'none', 
-                    border: 'none', 
-                    color: 'var(--color-secondary)', 
-                    cursor: 'pointer', 
-                    fontSize: '1rem', 
-                    padding: '4px', 
-                    lineHeight: '1',
-                    marginLeft: '8px'
-                }}
-            >
-              <FontAwesomeIcon icon={faPenToSquare} />
-            </button>
+    <div className="card">
+      <div className="annotation-card">
+        <div className="task-list-header" style={{ alignItems: 'flex-start', flexDirection: 'column' }}>
+          <h3 style={{ margin: '10px', flex: 1 }}>{item.title}</h3>
         </div>
-        
-        {/* Removido a exibição de Categoria para simplificar a interface */}
+
+        <div className="annotation-card-content">
+          <p>{item.description}</p>
+        </div>        
       </div>
-      
-      <div className="annotation-card-content">
-        <p>{item.description}</p>
-      </div>
-      
-      <div className="task-actions" style={{ marginTop: '10px', textAlign: 'right' }}>
-        <button 
-            onClick={() => onEditDescription(item.id, sectionTitle)} 
-            className="edit-btn" 
-            style={{ color: 'var(--color-primary)', padding: '4px 8px' }}
+    
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          justifyContent: 'space-between',
+          marginBottom: '4px',
+          padding: '4px',
+          borderRadius: '4px',
+          transition: 'background-color 0.2s'
+        }}
+      >
+        <button
+          onClick={() => onEdit(item.id, sectionTitle)}
+          className="edit-btn"
+          style={{ background: 'var(--color-primary)', padding: '10px 50px', margin: '2px' }}
         >
-          <FontAwesomeIcon icon={faPenToSquare} /> EDIT
+          <FontAwesomeIcon icon={faPenToSquare} />
         </button>
-        <button 
-            onClick={() => onDelete(item.id, sectionTitle)} 
-            className="delete-btn" 
-            style={{ color: 'var(--color-danger)', padding: '4px 8px', marginLeft: '8px' }}
+        <button
+          onClick={() => onDelete(item.id, sectionTitle)}
+          className="delete-btn"
+          style={{ color: 'var(--color-danger)', padding: '10px 50px', margin: '2px' }}
         >
-          <FontAwesomeIcon icon={faTrash} /> DELETE
+          <FontAwesomeIcon icon={faTrash} />
         </button>
       </div>
-    </div>
+      </div >
   );
 };
 
 export const Annotations: React.FC = () => {
   const { data, updatePlannerData } = usePlannerData();
   const ANNOTATIONS_ID = 'annotations';
+
+  // Modal states - simplificados
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [editingNote, setEditingNote] = useState<{ note: AnnotationItem; sectionTitle: string } | null>(null);
+  const [deletingNote, setDeletingNote] = useState<{ noteId: string; sectionTitle: string } | null>(null);
 
   const annotationsItem = useMemo(() => {
     return data?.menuConfig.menuItems.find(item => item.id === ANNOTATIONS_ID);
@@ -103,12 +103,17 @@ export const Annotations: React.FC = () => {
   }
 
 
-  // --- FUNÇÕES DE MANIPULAÇÃO DE DADOS (Inalteradas) ---
+  // --- FUNÇÕES DE MANIPULAÇÃO DE DADOS ---
   const handleDelete = (noteId: string, sectionTitle: string) => {
-    if (!window.confirm(`Are you sure you want to delete this note?`)) return;
+    setDeletingNote({ noteId, sectionTitle });
+    setIsDeleteModalOpen(true);
+  };
 
-    const newItemsContent = mapItemsContent(sectionTitle, (notes) => {
-      return notes.filter(note => note.id !== noteId);
+  const handleConfirmDelete = () => {
+    if (!deletingNote) return;
+
+    const newItemsContent = mapItemsContent(deletingNote.sectionTitle, (notes) => {
+      return notes.filter(note => note.id !== deletingNote.noteId);
     });
 
     if (newItemsContent) {
@@ -116,42 +121,28 @@ export const Annotations: React.FC = () => {
     }
   };
 
-  const handleEditTitle = (noteId: string, sectionTitle: string) => {
+  // Função unificada para editar nota (título e descrição juntos)
+  const handleEditNote = (noteId: string, sectionTitle: string) => {
     const section = annotationsContent.find(s => s.title === sectionTitle);
     const currentNote = (section?.descriptionList as AnnotationItem[] || []).find(n => n.id === noteId);
     
     if (!currentNote) return;
 
-    const newTitle = window.prompt("Edit Note Title:", currentNote.title);
-    if (!newTitle || newTitle.trim() === currentNote.title) return; 
-
-    const newItemsContent = mapItemsContent(sectionTitle, (notes) => {
-      return notes.map(note => {
-        if (note.id === noteId) {
-          return { ...note, title: newTitle.trim() }; 
-        }
-        return note;
-      });
-    });
-
-    if (newItemsContent) {
-      updateItemsContentInState(newItemsContent);
-    }
+    setEditingNote({ note: currentNote, sectionTitle });
+    setIsEditModalOpen(true);
   };
 
-  const handleEditDescription = (noteId: string, sectionTitle: string) => {
-    const section = annotationsContent.find(s => s.title === sectionTitle);
-    const currentNote = (section?.descriptionList as AnnotationItem[] || []).find(n => n.id === noteId);
-    
-    if (!currentNote) return;
+  const handleSaveEdit = (formData: any) => {
+    if (!editingNote) return;
 
-    const newDescription = window.prompt("Edit Note Content:", currentNote.description);
-    if (newDescription === null || newDescription.trim() === currentNote.description) return; 
-
-    const newItemsContent = mapItemsContent(sectionTitle, (notes) => {
+    const newItemsContent = mapItemsContent(editingNote.sectionTitle, (notes) => {
       return notes.map(note => {
-        if (note.id === noteId) {
-          return { ...note, description: newDescription.trim() }; 
+        if (note.id === editingNote.note.id) {
+          return { 
+            ...note, 
+            title: formData.title.trim(),
+            description: formData.description.trim()
+          };
         }
         return note;
       });
@@ -165,15 +156,11 @@ export const Annotations: React.FC = () => {
 
   // 3. CORREÇÃO: Lógica para ADICIONAR - Simplificada
   const handleAdd = () => {
-    // 1. Pede o Título da Nova Anotação
-    const noteTitle = window.prompt("Enter new note title:");
-    if (!noteTitle || noteTitle.trim() === "") return;
+    setIsAddModalOpen(true);
+  };
 
-    // 2. Pede o Conteúdo da Anotação
-    const noteDescription = window.prompt("Enter new note content:");
-    if (noteDescription === null) return; 
-
-    // 3. CORRIGIDO: Automaticamente insere na PRIMEIRA seção encontrada
+  const handleSaveAdd = (formData: any) => {
+    // Automaticamente insere na PRIMEIRA seção encontrada
     const targetSection = annotationsContent[0];
     
     if (!targetSection) {
@@ -184,8 +171,8 @@ export const Annotations: React.FC = () => {
     const newId = Date.now().toString(); 
     const newNote: AnnotationItem = { 
         id: newId, 
-        title: noteTitle.trim(), 
-        description: noteDescription.trim()
+        title: formData.title.trim(), 
+        description: formData.description.trim()
     };
 
     // Usa a seção alvo encontrada automaticamente
@@ -201,31 +188,109 @@ export const Annotations: React.FC = () => {
   
   const title = annotationsItem?.title || 'Annotations';
 
+  // Modal field configurations
+  const addNoteFields = [
+    {
+      name: 'title',
+      label: 'Note Title',
+      type: 'text' as const,
+      required: true,
+      placeholder: 'Enter note title...'
+    },
+    {
+      name: 'description',
+      label: 'Note Content',
+      type: 'textarea' as const,
+      required: true,
+      placeholder: 'Enter note content...'
+    }
+  ];
+
+  // Modal unificado para edição (título e descrição juntos)
+  const editNoteFields = [
+    {
+      name: 'title',
+      label: 'Note Title',
+      type: 'text' as const,
+      required: true,
+      placeholder: 'Enter note title...'
+    },
+    {
+      name: 'description',
+      label: 'Note Content',
+      type: 'textarea' as const,
+      required: true,
+      placeholder: 'Enter note content...'
+    }
+  ];
+
   return (
     <div className="page-container annotations-page">
-      <h2>{title}</h2>
-      
+      <div className="annotations-title">
+        <h2>{title}</h2>
+        <div className='annotations-add'>
+          <button className="modern-menu-toggle" onClick={handleAdd} style={{ height: '40px', width: '80px' }}>
+            <FontAwesomeIcon icon={faPlus} /> ADD
+          </button>
+        </div>
+      </div>
+
       <div className="annotations-grid">
         {annotationsContent.map((section) => (
-          // Itera sobre as notas dentro de cada seção
           (section.descriptionList as AnnotationItem[]).map(note => (
             <AnnotationCard 
               key={note.id} 
               item={note} 
               sectionTitle={section.title}
-              onEditTitle={handleEditTitle}
-              onEditDescription={handleEditDescription}
+              onEdit={handleEditNote}
               onDelete={handleDelete}
             />
           ))
         ))}
       </div>
-      <div style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'center', flexDirection: "row", marginTop: '20px'}}>
-        <button 
-          className="modern-menu-toggle" onClick={handleAdd} style={{ width: '50%', padding: '10px 0'}}>
-            <FontAwesomeIcon icon={faPlus} /> ADD NOTE
-          </button>
-      </div>
+      
+
+      {/* Add Note Modal */}
+      <FormModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSubmit={handleSaveAdd}
+        title="Add New Note"
+        fields={addNoteFields}
+        submitButtonText="ADD NOTE"
+      />
+
+      {/* Edit Note Modal - Unificado (título e descrição juntos) */}
+      <EditModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingNote(null);
+        }}
+        onSave={handleSaveEdit}
+        title="Edit Note"
+        fields={editNoteFields}
+        initialData={editingNote ? {
+          title: editingNote.note.title,
+          description: editingNote.note.description
+        } : {}}
+        saveButtonText="SAVE CHANGES"
+      />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setDeletingNote(null);
+        }}
+        onConfirm={handleConfirmDelete}
+        title="Delete Note"
+        message="Are you sure you want to delete this note? This action cannot be undone."
+        confirmText="DELETE"
+        cancelText="CANCEL"
+        type="danger"
+      />
     </div>
   );
 };
