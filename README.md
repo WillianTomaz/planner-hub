@@ -21,6 +21,9 @@
 * **Styling:** Modern CSS (Flexbox/Grid for responsiveness)
 * **Data Management:** LocalStorage & JSON
 
+## 🖼️ Project Image
+<img height="500" alt="image" src="https://github.com/user-attachments/assets/3c02b9a0-8dc7-4143-99d5-7047d69c02dd" />
+
 ## 🏗️ Project Architecture Flow (Mermaid Diagram)
 ```mermaid
 graph TD
