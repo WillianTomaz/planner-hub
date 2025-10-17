@@ -35,6 +35,9 @@
     --spacing-md: 16px;
     --spacing-lg: 20px;
     --spacing-xl: 28px;
+
+    /* Sidebar width for desktop */
+    --sidebar-width: 280px;
 }
 
 /* Base Styles */
@@ -354,14 +357,28 @@ button {
     grid-template-columns: 1fr;
 }
 
+.dashboard-top-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+    margin-bottom: 25px;
+}
 .dashboard-time-content {
-    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    vertical-align: middle;
+    font-size: 1.3rem;
     font-weight: 600;
-    /* background-color: var(--color-surface); */
+    background-color: var(--color-surface);
     border-radius: 10px;
-    padding: 8px;
-    margin-bottom: 30px;
     text-align: center;
+    width: auto;
+    min-width: 47%;
+    padding: var(--spacing-sm);
+    height: 110px;
+    /* margin-left: 10px; */
 }
 
 /* --- Annotations Page Specific Styles --- */
@@ -822,19 +839,17 @@ button {
 
 /* Pomodoro */
 .pomodoro-container {
-    /* TODO: Talvez deixar o pomodoro em uma unica linha para não ocupar tanto espaço */
-
-    background-color: var(--color-surface);
-    border-radius: var(--spacing-sm);
-    padding: var(--spacing-sm);
-    margin: 10px 0 20px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 250px;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+    justify-content: center;
+    width: auto;
+    min-width: 47%;
+    padding: var(--spacing-sm);
+    height: 110px;
+    margin-left: 10px;
+    background-color: var(--color-surface);
+    border-radius: var(--spacing-sm);
     box-shadow: var(--color-primary-shadow);
     transition: opacity 0.3s ease;
 }
@@ -878,22 +893,6 @@ button {
     margin-top: 4px;
 }
 
-@media (max-width: 1200px) {
-    .dashboard-time-content{
-        /* TODO: Fazer o timer ficar lado a lado quando estiver com tela grande e quando estiver com tela menores deixar eles um abaixo do outro ocupando toda tela
-        ou fazer o sombreado da hora desaparecer */
-    }
-
-    .pomodoro-container {
-        max-width: 100%;
-        padding: var(--spacing-xs);
-        margin: 8px 0 16px 0;
-    }
-
-    .pomodoro-time {
-        font-size: 1.25rem;
-    }
-}
 
 
 
@@ -914,6 +913,7 @@ button {
 }
 
 /*------ MEDIA MIN-WIDTH: 1024px ----------*/
+/* Desktop: fix sidebar (left) and make content aware */
 @media (min-width: 1024px) {
     .dashboard-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -931,38 +931,41 @@ button {
         display: none;
     }
 
-    .content-wrapper {
-        display: flex;
-        flex-direction: row;
-    }
-
+    /* Make the side menu fixed at desktop */
     .menu-drawer {
-        position: static;
-        width: 280px;
-        min-width: 280px;
-        height: auto;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: var(--sidebar-width);
+        min-width: var(--sidebar-width);
+        height: 100vh;
         visibility: visible;
         opacity: 1;
         background-color: var(--color-surface);
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        z-index: 180;
+        overflow: hidden;
     }
 
+    /* Drawer content scrolls internally (menu items scroll inside the sidebar) */
     .menu-drawer .drawer-content {
         width: 100%;
         max-width: none;
         height: 100%;
         transform: translateX(0);
-        position: sticky;
-        top: 0;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
     }
 
     .menu-drawer .close-btn {
         display: none;
     }
 
+    /* Push the main content to the right so it doesn't go under the fixed sidebar */
     .planner-content {
-        flex-grow: 1;
-        width: auto;
+        margin-left: var(--sidebar-width);
         padding-left: var(--spacing-xl);
     }
     
@@ -975,6 +978,12 @@ button {
     }
 }
 
+/*------ MEDIA MIN-WIDTH: 1400px ----------*/
+@media (max-width: 1200px) {
+    .pomodoro-time {
+        font-size: 1.25rem;
+    }
+}
 
 /*------ MEDIA MIN-WIDTH: 1400px ----------*/
 @media (min-width: 1400px) {
@@ -998,6 +1007,21 @@ button {
 
 /*------ MEDIA MAX-WIDTH: 768px ----------*/
 @media (max-width: 768px) {
+
+    .dashboard-top-info{
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .dashboard-time-content {
+        height: 40px;
+    }
+
+    .pomodoro-container {
+        margin-top: 10px;
+        margin-left: 0px;
+    }
+
     .modal-overlay {
         padding: var(--spacing-sm);
     }

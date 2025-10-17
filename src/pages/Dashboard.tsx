@@ -265,12 +265,12 @@ export const Dashboard: React.FC = () => {
     return (
         <div className="page-container dashboard-page">
             {/* Date/Time Display */}
-            <div className="dashboard-time-content">
-                {timestamp}
+            <div className="dashboard-top-info">
+                <div className="dashboard-time-content" style={!isPomodoroEnabled ? { height: '40px', width: '100%' } : {}}> 
+                    {timestamp} 
+                </div>
+                {isPomodoroEnabled && <PomodoroTimer />}
             </div>
-
-            {isPomodoroEnabled && <PomodoroTimer />}
-
             <div>
                 <div className="dashboard-grid">
                     {dashboardItems.map(item => (
