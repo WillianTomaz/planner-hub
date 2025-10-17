@@ -249,7 +249,8 @@
   "appConfig": [
     {
       "darkModeEnabled": false,
-      "backupFileName": "PlannerHub"
+      "backupFileName": "PlannerHub",
+      "isPomodoroEnabled": false
     }
   ]
 }

@@ -1,6 +1,3 @@
-
-
-
 export interface TodoItem {
   id: string;
   text: string;
@@ -38,6 +35,7 @@ export interface UserConfig {
 export interface AppConfig {
   darkModeEnabled: boolean;
   backupFileName: string;
+  isPomodoroEnabled?: boolean;
   saveStatus?: 'Saved' | 'Not Saved';
   lastSaveTimestamp?: string;
 }

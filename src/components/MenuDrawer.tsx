@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePlannerData } from '../hooks/usePlannerData';
 import plannerhubIcon from '../assets/plannerhub-icon.png'; 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock } from '@fortawesome/free-solid-svg-icons';
 
 interface MenuDrawerProps {
   isOpen: boolean;
@@ -10,7 +12,7 @@ interface MenuDrawerProps {
 }
 
 export const MenuDrawer: React.FC<MenuDrawerProps> = ({ isOpen, onClose, onExport }) => {
-  const { data, resetData } = usePlannerData();
+  const { data, resetData, updatePlannerData } = usePlannerData();
   const navigate = useNavigate();
 
   // Simple Function for Navigation
@@ -35,7 +37,26 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({ isOpen, onClose, onExpor
 
     handleNavigation(finalItemId);
   }
-  
+
+  const isPomodoroEnabled = useMemo(() => {
+    return data?.appConfig[0]?.isPomodoroEnabled ?? false;
+  }, [data]);
+
+  const togglePomodoro = () => {
+    if (data && data.appConfig[0]) {
+        const updatedConfig = data.appConfig.map((config, index) => {
+            if (index === 0) {
+                return { ...config, isPomodoroEnabled: !isPomodoroEnabled };
+            }
+            return config;
+        });
+        updatePlannerData({ appConfig: updatedConfig });
+        
+        onClose();
+        navigate('/');
+    }
+  };
+
   return (
     // The outer div (overlay) closes the menu when clicking outside
     <div className={`menu-drawer ${isOpen ? 'open' : ''}`} onClick={onClose}>
@@ -63,7 +84,16 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({ isOpen, onClose, onExpor
             ))}
         </nav>
 
+
+
         <div className="menu-actions-fixed">
+          <button className="btn-data" onClick={togglePomodoro}>
+              <FontAwesomeIcon icon={faClock} style={{ marginRight: '8px' }} />
+              POMODORO: {isPomodoroEnabled ? 'ON' : 'OFF'}
+          </button>
+          <div className="menu-actions-fixed" 
+              style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: '10px', marginBottom: '10px' }}>
+          </div>
           <button className="btn-data" onClick={resetData}>
             RESET DATA
           </button>

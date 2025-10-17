@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import { usePlannerData } from '../hooks/usePlannerData';
 import { useNavigate } from 'react-router-dom';
-
 import type { MenuItem, ItemContent, TodoItem, AnnotationItem, ScheduleItem, DescriptionItem } from '../types/planner';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { PomodoroTimer } from '../components/PomodoroTimer';
 
-// Utility function to get the current day of the week in Portuguese
+// Utility function to get the current day of the week
 const getWeekDayName = (date: Date): string => {
     // Array of days of the week, starting with Sunday (index 0)
     const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
@@ -257,12 +257,20 @@ export const Dashboard: React.FC = () => {
         ) || [];
     }, [data]);
 
+    const isPomodoroEnabled = useMemo(() => {
+        return data?.appConfig[0]?.isPomodoroEnabled ?? false;
+    }, [data]);
+
+
     return (
         <div className="page-container dashboard-page">
             {/* Date/Time Display */}
             <div className="dashboard-time-content">
                 {timestamp}
             </div>
+
+            {isPomodoroEnabled && <PomodoroTimer />}
+
             <div>
                 <div className="dashboard-grid">
                     {dashboardItems.map(item => (

@@ -357,7 +357,7 @@ button {
 .dashboard-time-content {
     font-size: 1.2rem;
     font-weight: 600;
-    background-color: var(--color-surface);
+    /* background-color: var(--color-surface); */
     border-radius: 10px;
     padding: 8px;
     margin-bottom: 30px;
@@ -818,6 +818,81 @@ button {
     background-color: #FFB84D;
     box-shadow: 0 4px 16px rgba(255, 165, 0, 0.4);
     transform: translateY(-1px);
+}
+
+/* Pomodoro */
+.pomodoro-container {
+    /* TODO: Talvez deixar o pomodoro em uma unica linha para não ocupar tanto espaço */
+
+    background-color: var(--color-surface);
+    border-radius: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    margin: 10px 0 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 250px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: var(--color-primary-shadow);
+    transition: opacity 0.3s ease;
+}
+
+.pomodoro-time {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.pomodoro-controls button {
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.pomodoro-controls button:hover {
+    background-color: var(--color-surface-hover);
+}
+
+.pomodoro-controls .pomodoro-active-btn {
+    background: var(--color-primary);
+    border: none;
+    font-weight: 600;
+}
+
+.pomodoro-controls .pomodoro-active-btn:hover {
+    background: var(--color-primary-hover);
+}
+
+.pomodoro-status {
+    font-size: 0.75rem;
+    color: var(--color-secondary);
+    margin-top: 4px;
+}
+
+@media (max-width: 1200px) {
+    .dashboard-time-content{
+        /* TODO: Fazer o timer ficar lado a lado quando estiver com tela grande e quando estiver com tela menores deixar eles um abaixo do outro ocupando toda tela
+        ou fazer o sombreado da hora desaparecer */
+    }
+
+    .pomodoro-container {
+        max-width: 100%;
+        padding: var(--spacing-xs);
+        margin: 8px 0 16px 0;
+    }
+
+    .pomodoro-time {
+        font-size: 1.25rem;
+    }
 }
 
 
