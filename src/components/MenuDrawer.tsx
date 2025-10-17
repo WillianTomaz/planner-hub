@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePlannerData } from '../hooks/usePlannerData';
-import plannerhubIcon from '../assets/plannerhub-icon.png'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
 
@@ -63,7 +62,13 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({ isOpen, onClose, onExpor
       {/* The inner div prevents closing when clicking on the menu content */}
       <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
         <div className="menu-header menu-header-icon">
-            <img src={plannerhubIcon} alt="Planner Hub Icon" className="app-icon-drawer" />
+              <a style={{ cursor: 'pointer' }}
+                key={'dashboard'}
+                onClick={(e) => handleMenuItemClick(e, '/')} >
+                  <h1 className="app-title">
+                    {data?.menuConfig.menuTitle || "Planner HUB"}
+                  </h1>
+              </a>
         </div>
         
         {/* Close button with new style */}

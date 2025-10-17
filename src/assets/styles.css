@@ -915,6 +915,9 @@ button {
 /*------ MEDIA MIN-WIDTH: 1024px ----------*/
 /* Desktop: fix sidebar (left) and make content aware */
 @media (min-width: 1024px) {
+    .app-title-layout{
+        display: none;
+    }
     .dashboard-grid {
         grid-template-columns: repeat(2, 1fr);
     }

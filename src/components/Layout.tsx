@@ -54,7 +54,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             <a style={{ cursor: 'pointer' }}
               key={'dashboard'}
               onClick={(e) => handleMenuItemClick(e, '/')} >
-                <h1 className="app-title">
+                <h1 className="app-title app-title-layout"> 
                   {data?.menuConfig.menuTitle || "Planner HUB"}
                 </h1>
             </a>
