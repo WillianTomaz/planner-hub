@@ -52,7 +52,8 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({ isOpen, onClose, onExpor
         updatePlannerData({ appConfig: updatedConfig });
         
         onClose();
-        navigate('/');
+        // navigate('/');
+        window.location.reload(); 
     }
   };
 
