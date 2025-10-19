@@ -236,14 +236,14 @@
       "name": "Admin",
       "username": "admin-full",
       "permission": "full",
-      "active": true
+      "active": false
     },
     {
       "id": "2",
       "name": "Common User",
       "username": "user-01",
       "permission": "read",
-      "active": true
+      "active": false
     }
   ],
   "appConfig": [

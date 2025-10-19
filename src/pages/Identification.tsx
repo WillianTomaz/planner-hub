@@ -1,117 +1,112 @@
-// src/pages/Identification.tsx
-import React, { useState, useEffect, useRef } from 'react'; // Adicionando useRef
+import React, { useState, useEffect, useRef } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 import { usePlannerData } from '../hooks/usePlannerData';
-import type { PlannerData } from '../types/planner'; // Assumindo que o erro de importação foi resolvido
-// import plannerhubIcon from '../assets/plannerhub-icon.png'; 
+import type { PlannerData } from '../types/planner'; 
+import { ConfirmModal } from '../components/ConfirmModal';
 
 export const Identification: React.FC = () => {
-  const { data, isAuthenticated, updatePlannerData } = usePlannerData();
+  const { data, isAuthenticated, loginUser, resetData } = usePlannerData(); 
   const navigate = useNavigate();
-  const fileInputRef = useRef<HTMLInputElement>(null); // Referência para o input de arquivo
+  const fileInputRef = useRef<HTMLInputElement>(null); 
 
   const [username, setUsername] = useState('');
-  const [timestamp, setTimestamp] = useState('');
+
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [onSuccessConfirm, setOnSuccessConfirm] = useState<() => void>(() => () => {});
 
   useEffect(() => {
-    // If already authenticated, redirect to dashboard
     if (isAuthenticated) {
       navigate('/dashboard', { replace: true });
     }
-    // Set current time for display
-    const now = new Date();
-    setTimestamp(now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + ' ' + now.toLocaleDateString('pt-BR'));
   }, [isAuthenticated, navigate]);
 
+  const validateUsername = (raw: string): { ok: boolean; reason?: string; normalized?: string } => {
+    if (!raw || !raw.trim()) return { ok: false, reason: 'Username is required.' };
+    const normalized = raw.trim().toLowerCase().replace(/\s+/g, '');
+    if (normalized.length < 3) return { ok: false, reason: 'Username must be at least 3 characters long.' };
+    const usernameRegex = /^[a-z0-9._-]{3,}$/;
+    if (!usernameRegex.test(normalized)) return { ok: false, reason: 'Invalid username. Use letters, numbers, dot, underscore or hyphen. No spaces.' };
+    return { ok: true, normalized };
+  };
+
   const handleEnter = () => {
-    const user = data?.userConfig.find(u => u.username === username);
+    const v = validateUsername(username);
+    if (!v.ok) {
+      setErrorMessage(v.reason || 'Invalid username.');
+      setIsErrorModalOpen(true);
+      return;
+    }
 
-    if (user) {
-      // Logic to activate the user
-      const updatedUserConfig = data!.userConfig.map(u => ({
-        ...u,
-        active: u.username === username 
-      }));
-
-      updatePlannerData({ userConfig: updatedUserConfig });
-      
-      alert(`Welcome back, ${user.name}!`);
-      navigate('/dashboard');
-
+    const success = loginUser(v.normalized!);
+    if (success) {
+      setSuccessMessage(`Welcome back, ${v.normalized}!`);
+      // navigate only after user confirms the modal
+      setOnSuccessConfirm(() => () => navigate('/dashboard', { replace: true }));
+      setIsSuccessModalOpen(true);
     } else {
-      alert('Username not found. Please try "admin-full" or "user-01" as per the initial JSON.');
+      setErrorMessage('Username not found. You can create a new account.');
+      setIsErrorModalOpen(true);
     }
   };
 
-  // Nova função para acionar o clique no input file
   const triggerImportClick = () => {
     if (fileInputRef.current) {
         fileInputRef.current.click();
     }
   };
 
-  // Implementação da funcionalidade de importação
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
     const reader = new FileReader();
-
     reader.onload = (e) => {
       try {
         const jsonText = e.target?.result as string;
-        // 1. Analisa o JSON
         const importedData = JSON.parse(jsonText) as PlannerData;
-        
-        // 2. Garante que a estrutura básica está correta (checa se existe menuConfig)
+
         if (!importedData.menuConfig) {
-            throw new Error("Invalid file structure. Missing 'menuConfig'.");
+          setErrorMessage("Invalid file structure. Missing 'menuConfig'.");
+          setIsErrorModalOpen(true);
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          return;
         }
 
-        // 3. Salva a nova estrutura no LocalStorage (usando updatePlannerData)
-        // Isso irá sobrescrever o estado atual e marcar como 'Not Saved' temporariamente
-        // A função saveLocalState deve ser chamada para persistir no LS, mas o update já o prepara.
-        // Como estamos importando, queremos salvar imediatamente a nova versão.
+        // Persist to localStorage (keeps provider logic simple)
         localStorage.setItem('plannerHub_data', JSON.stringify(importedData));
-        
-        alert('Data successfully imported and saved locally! Please re-enter your username to proceed.');
-        
-        // Recarrega a página para iniciar o ciclo de usePlannerData com os novos dados
-        window.location.reload(); 
-
+        setSuccessMessage('Data successfully imported! Would you like to continue with existing data?');
+        setOnSuccessConfirm(() => () => {
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          window.location.reload();
+        });
+        setIsSuccessModalOpen(true);
       } catch (error) {
-        console.error("Error importing data:", error);
-        alert(`Failed to import file: ${error instanceof Error ? error.message : "The file is not a valid JSON structure."}`);
+        setErrorMessage(`Error importing file: ${(error as Error).message}`);
+        setIsErrorModalOpen(true);
+        if (fileInputRef.current) fileInputRef.current.value = '';
       }
     };
-
     reader.readAsText(file);
-    // Limpa o valor do input para permitir o upload do mesmo arquivo novamente
-    event.target.value = '';
   };
 
   const handleResetData = () => {
-    if (window.confirm("Are you sure you want to reset all data? This will clear your local changes.")) {
-        localStorage.removeItem('plannerHub_data');
-        window.location.reload();
-    }
+    resetData();
   };
 
   return (
     <div className="identification-container">
-      <div className="identification-card card">
-        <div className="save-status-container">
-          <div className="save-status status-saved ">Saved</div> 
-          <div style={{ margin: '0px', fontSize: '0.85rem' }}>{timestamp}</div>
-        </div>
-        <div className="app-title-container">
-          {/* <img src={plannerhubIcon} alt="Planner Hub Icon" className="app-icon" /> */}
-          <h1 className="app-title" style={{ fontSize: '2rem' }}>
-            {data?.menuConfig.menuTitle || "Planner HUB"}
-          </h1>
+      <div className="card identification-card">
+        <div className="identification-header">
+          <div className="app-title-container">
+            <h1 className="app-title" style={{ fontSize: '2rem' }}>
+              {data?.menuConfig.menuTitle || "Planner HUB"}
+            </h1>
+          </div>
         </div>
         
-        <div className="form-group" style={{ textAlign: "initial", }}>
+        <div className="form-group" style={{ textAlign: "initial", marginTop: '20px' }}>
           <label style={{ fontWeight: 500, margin: '50px 0 10px 0'}}>
             USERNAME:
           </label>
@@ -124,21 +119,32 @@ export const Identification: React.FC = () => {
             placeholder="username"
           />
         </div>
-        
+
         <button onClick={handleEnter} className="modern-menu-toggle" style={{ width: '100%', marginBottom: '16px' }}>
           ENTER
         </button>
+
+        <button 
+          onClick={() => navigate('/register')} 
+          className="btn-data" 
+          style={{ 
+            background: 'var(--color-surface-hover)', 
+            color: 'var(--color-text)', 
+            border: '1px solid var(--color-border)', 
+            marginBottom: '16px', 
+          }}
+        >
+          CREATE ACCOUNT
+        </button>
         
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          accept=".json" 
+          onChange={handleFileChange} 
+          style={{ display: 'none' }}
+        />
         <div className="action-row">
-          {/* Oculta o input real e aciona-o via clique no botão */}
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            accept=".json" 
-            onChange={handleFileChange} 
-            style={{ display: 'none' }}
-          />
-          {/* TODO: Criar classes dos botões e padronizar com todos que possuem o btn (menu lateral) */}
           <button className="btn-data" onClick={triggerImportClick}>
             IMPORT DATA
           </button>
@@ -147,6 +153,29 @@ export const Identification: React.FC = () => {
           </button>
         </div>
       </div>
+      <ConfirmModal
+        isOpen={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+        onConfirm={() => setIsErrorModalOpen(false)}
+        title="Validation Error"
+        message={errorMessage}
+        confirmText="OK"
+        type="danger"
+      />
+
+      <ConfirmModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+        onConfirm={() => {
+          setIsSuccessModalOpen(false);
+          onSuccessConfirm();
+        }}
+        title="Success"
+        message={successMessage}
+        confirmText="OK"
+        type="info"
+        showIcon={false}
+      />
     </div>
   );
 };
