@@ -4,7 +4,7 @@
 > A personal, single-page weekly planning application designed to work entirely in the browser using **LocalStorage** for persistent data storage. No backend or API is required, making it perfect for free deployment on GitHub Pages or Netlify.
 
 ## 🤟 Motivation
-> Tired of using paper planners, this project aims to create a highly functional, responsive digital planner. The core constraint—no database—is solved by leveraging browser storage and file export for backups, giving the user full control over their data.
+> Tired of using paper planners, this project aims to create a highly functional, responsive digital planner. The core constraint, which is no database, is solved by leveraging browser storage and file export for backups, giving the user full control over their data.
 
 ## 🎁 Donate
 <p dir="auto">
